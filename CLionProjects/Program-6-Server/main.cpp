@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include "ConnectionHandler.h"
 
 using namespace std;
 
@@ -44,19 +45,24 @@ int main(int argc, char *argv[]) {
         std::cout << "ERROR on binding to socket" <<std::endl;
     }
 
-    listen(socketFileDescriptor, 5); //Listens and waits for connection to socket with at most 5 in the queue. This is when the client will connect
+    listen(socketFileDescriptor, 5); //Tells socket it will be listening for connection with at most 5 in the queue.
 
     ClientAddressSize = sizeof(client_address); //Connection made, get size data about client information variable to make accepting easier.
 
-    //accept accepts 3 inputs
+    //accept accepts 3 inputs. Accpet listens and waits for a connection. This is when the client will connect.
     //1 - the socket file descriptor of general socket connected to(connectedClientFileDescriptor represents the connection itself, socketFileDescriptor represents and unconnected listener)
     //2 - the client address information (must be type casted as a sockaddr as shown below
     //3 - the size of the client address information
+    std::cout << "Listening for connections..." <<std::endl;
     connectedClientFileDescriptor = accept(socketFileDescriptor, (struct sockaddr *) &client_address, &ClientAddressSize);
+    std::cout << "Client Attempting to connect..." <<std::endl;
     if(connectedClientFileDescriptor<0){
         std::cout << "Error on connection accept" << std::endl;
+    } else {
+        std::cout << "Client Connected! Spawning thread to handle client..." <<std::endl;
     }
 
     //Connection in connectedClientFileDescriptor, need to create class instance and spawn thread for managing client connection
-
+    //For now this code allows one connection as a test.
+    ConnectionHandler client1(connectedClientFileDescriptor);
 }
