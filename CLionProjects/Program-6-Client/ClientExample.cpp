@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -7,51 +8,86 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
-void error(const char *msg)
-{
-    perror(msg);
-    exit(0);
-}
+using namespace std;
+
+std::string readConnection();
+int writeConnection(std::string dataToWrite);
+
+int socketFileDescriptor; //File discription for socket used to make connection
+char buffer[256]; //Buffer to store data for receive
 
 int main(int argc, char *argv[])
 {
-    int sockfd, portno, n;
-    struct sockaddr_in serv_addr;
+    int portNumber, numberOfCharacters;
+    struct sockaddr_in server_address;
     struct hostent *server;
 
-    char buffer[256];
+
     if (argc < 3) {
-        fprintf(stderr,"usage %s hostname port\n", argv[0]);
-        exit(0);
+        //Stuff for prompting ip
+
+    }else{
+        portNumber = atoi(argv[2]);
+        server = gethostbyname(argv[1]);
     }
-    portno = atoi(argv[2]);
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0)
-        error("ERROR opening socket");
-    server = gethostbyname(argv[1]);
+
+    //AF_INET - Listen for internet connection(As opposed to local machine
+    //SOCK_STREAM - Stream data rather then sending in chunks
+    //0 - Use most appropriate connection method
+
+    socketFileDescriptor = socket(AF_INET, SOCK_STREAM, 0);
+    if (socketFileDescriptor < 0)
+        cout << "ERROR opening socket" << endl;
+
     if (server == NULL) {
-        fprintf(stderr,"ERROR, no such host\n");
+        cout << "ERROR, no such host" << endl;
         exit(0);
     }
-    bzero((char *) &serv_addr, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    bcopy((char *)server->h_addr,
-          (char *)&serv_addr.sin_addr.s_addr,
-          server->h_length);
-    serv_addr.sin_port = htons(portno);
-    if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0)
-        error("ERROR connecting");
-    printf("Please enter the message: ");
-    bzero(buffer,256);
-    fgets(buffer,255,stdin);
-    n = write(sockfd,buffer,strlen(buffer));
-    if (n < 0)
-        error("ERROR writing to socket");
-    bzero(buffer,256);
-    n = read(sockfd,buffer,255);
-    if (n < 0)
-        error("ERROR reading from socket");
-    printf("%s\n",buffer);
-    close(sockfd);
+
+    bzero((char *) &server_address, sizeof(server_address)); //Sets all values of server_address to zero to prepare for listener
+
+    server_address.sin_family = AF_INET; //Server Address is listen to internet connections
+    bcopy((char *)server->h_addr, (char *)&server_address.sin_addr.s_addr, server->h_length); //Have to use bcopy because server->h_addr is a character string
+    server_address.sin_port = htons(portNumber); //Port number to listen to. htons() converts port number to network byte order (Because computer networks are big endian)
+
+    //Make a connection to the server using the socket defined at socketFileDescriptor
+    if (connect(socketFileDescriptor,(struct sockaddr *) &server_address,sizeof(server_address)) < 0) {
+        cout << "ERROR connecting" << endl;
+    }
+
+    cout << "Please enter the message: ";
+
+    string test;
+    getline(stdin, test);
+    writeConnection(test);
+
+    test = readConnection();
+
+    cout << endl << test << endl;
+
+    close(socketFileDescriptor);
+    return 0;
+}
+
+
+std::string readConnection(){
+    ssize_t numOfCharRead;
+    bzero(buffer,256); //Zero out the buffer
+    numOfCharRead = read(socketFileDescriptor,buffer,255);
+    if (numOfCharRead < 0){
+        cout << "ERROR reading from socket" << endl;
+        return "";
+    }
+    std::string returnString(buffer);
+    return returnString;
+}
+
+int writeConnection(std::string dataToWrite){
+    ssize_t numOfCharRead;
+    numOfCharRead = write(socketFileDescriptor,dataToWrite.c_str(),dataToWrite.length());
+    if (numOfCharRead < 0){
+        cout << "ERROR writing to socket" << endl;
+        return -1;
+    }
     return 0;
 }
