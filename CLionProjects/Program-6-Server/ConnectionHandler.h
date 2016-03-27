@@ -14,6 +14,7 @@ class ConnectionHandler {
         ConnectionHandler(int ConnectedClientFileDescriptor);
         void Test1Method();
         void error(const char *msg);
+        void closeConnection();
     private:
         int ClientFileDescriptor;
         ssize_t numOfCharRead;

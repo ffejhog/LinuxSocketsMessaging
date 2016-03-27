@@ -32,3 +32,6 @@ void ConnectionHandler::error(const char *msg){
 }
 
 
+void ConnectionHandler::closeConnection() {
+    close(ClientFileDescriptor);
+}
