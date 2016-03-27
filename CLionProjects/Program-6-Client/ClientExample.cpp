@@ -12,6 +12,7 @@ using namespace std;
 
 std::string readConnection();
 int writeConnection(std::string dataToWrite);
+void mainClientHandler();
 
 int socketFileDescriptor; //File discription for socket used to make connection
 char buffer[256]; //Buffer to store data for receive
@@ -55,18 +56,25 @@ int main(int argc, char *argv[])
         cout << "ERROR connecting" << endl;
     }
 
+    mainClientHandler(); //Control handed to main File handler(THis is separate for simplicity purposes)
+
+    close(socketFileDescriptor);
+    return 0;
+}
+
+
+void mainClientHandler(){
+
     cout << "Please enter the message: ";
 
     string test;
-    getline(stdin, test);
+    getline(cin, test);
     writeConnection(test);
 
     test = readConnection();
 
     cout << endl << test << endl;
 
-    close(socketFileDescriptor);
-    return 0;
 }
 
 

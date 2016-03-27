@@ -21,7 +21,7 @@ ConnectionHandler::ConnectionHandler(int ConnectedClientFileDescriptor){
 
             //if they arent in database
             //then increment numOfAuthTries by one, otherwise success, set username to the entered username and set Authenticated to true. Also be sure to send success to client
-
+            //Also need to remember to send response to client if they fail all 3 tries
         } else {
             std::cout << "Error on auth read" << std::endl;
             closeConnection();
