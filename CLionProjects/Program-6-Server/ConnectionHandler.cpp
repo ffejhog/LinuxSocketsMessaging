@@ -8,7 +8,7 @@
 ConnectionHandler::ConnectionHandler(int ConnectedClientFileDescriptor){
     ClientFileDescriptor = ConnectedClientFileDescriptor;
     bzero(buffer,256);
-    Test1Method();
+
 }
 
 void ConnectionHandler::Test1Method(){
