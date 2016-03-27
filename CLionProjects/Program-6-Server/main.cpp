@@ -36,8 +36,7 @@ int main(int argc, char *argv[]) {
     bzero((char *) &server_address,
           sizeof(server_address)); //Sets all values of server_address to zero to prepare for listener
     server_address.sin_family = AF_INET; //Server Address is listen to internet connections
-    server_address.sin_port = htons(
-            portNumber); //Port number to listen to. htons() converts port number to network byte order (Because computer networks are big endian)
+    server_address.sin_port = htons(portNumber); //Port number to listen to. htons() converts port number to network byte order (Because computer networks are big endian)
     server_address.sin_addr.s_addr = INADDR_ANY; //Sets server address to its own ip address. Allows connections.
 
     //bind accepts 3 inputs
@@ -60,8 +59,7 @@ int main(int argc, char *argv[]) {
     //3 - the size of the client address information
     std::cout << "Listening for connections..." << std::endl;
 
-    while (connectedClientFileDescriptor = accept(socketFileDescriptor, (struct sockaddr *) &client_address,
-                                                  &ClientAddressSize)) {
+    while (connectedClientFileDescriptor = accept(socketFileDescriptor, (struct sockaddr *) &client_address, &ClientAddressSize)) {
         std::cout << "Client Attempting to connect..." << std::endl;
         if (connectedClientFileDescriptor < 0) {
             std::cout << "Error on connection accept" << std::endl;
@@ -84,8 +82,12 @@ int main(int argc, char *argv[]) {
 void *connection_handler(void *client_socket_desc){
     int ClientFileDescriptor = *(int*)client_socket_desc;
     ConnectionHandler clienthandler(ClientFileDescriptor);
-    clienthandler.Test1Method();
-    clienthandler.closeConnection();
+    if(!clienthandler.checkIfAuthenticated()){
+        clienthandler.closeConnection();
+    }else{
+        clienthandler.mainHandler();
+    }
+
     return 0;
 }
 
