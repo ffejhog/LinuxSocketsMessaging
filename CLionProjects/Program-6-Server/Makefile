@@ -1,4 +1,4 @@
-CFLAGS=-std=c++11 #set compiler to use c++11 (to fix warning about const data)
+CFLAGS=-std=c++11 -pthread #set compiler to use c++11 (to fix warning about const data)
 CC=g++ #set compiler to be used
 
 
