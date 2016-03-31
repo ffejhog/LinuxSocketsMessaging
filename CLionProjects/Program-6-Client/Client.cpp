@@ -1,21 +1,4 @@
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-
-using namespace std;
-
-std::string readConnection();
-int writeConnection(std::string dataToWrite);
-void mainClientHandler();
-
-int socketFileDescriptor; //File discription for socket used to make connection
-char buffer[256]; //Buffer to store data for receive
+#include "Client.h"
 
 int main(int argc, char *argv[])
 {
@@ -57,25 +40,82 @@ int main(int argc, char *argv[])
     }
 
     mainClientHandler(); //Control handed to main File handler(THis is separate for simplicity purposes)
-
+    if(authenticated) {
+        //authenticatedClientHandler();
+    }
     close(socketFileDescriptor);
     return 0;
 }
 
 
 void mainClientHandler(){
+    string userinput;
 
-    cout << "Please enter the message: ";
+    do {
+        cout << "Please Choose...  " << endl;
+        cout << "1. Login" << endl;
+        cout << "2. Create New User" << endl;
+        cout << "3. Exit" << endl;
 
-    string test;
-    getline(cin, test);
-    writeConnection(test);
+        getline(cin, userinput);
 
-    test = readConnection();
+        switch (stoi(userinput)) {
+            case 1:
+                userLogin();
+                break;
+            case 2:
+                //newUser();
+                break;
+            case 3:
+                return;
+            default:
+                cout << "That is not a valid option" << endl << endl;
+        }
+        }while(!authenticated);
 
-    cout << endl << test << endl;
+        string test;
+        getline(cin, test);
+        writeConnection(test);
+
+        test = readConnection();
+
+        cout << endl << test << endl;
 
 }
+
+void userLogin(){
+    string userName;
+    string password;
+
+    writeConnection("1"); //Tell Server to prepare for login
+    string serverResponse = readConnection(); //Retreive the servers response
+    if(serverResponse.compare("1")){
+        //server is good to receive
+        cout << "Username: ";
+        getline(cin, userName);
+        cout << "Password: ";
+        getline(cin, password);
+        //Hash password here
+        writeConnection(userName);
+        writeConnection(password);
+        serverResponse = readConnection();
+        if(serverResponse.compare("1")){
+            cout << "Success! Logging in User..." << endl;
+            authenticated = true;
+            return;
+        }else{
+            //User not valid
+            cout << "Username or Password incorrect, please try login again" << endl;
+            return;
+        }
+    }else{
+        //Server bad to receive, error
+        cout << "Error from server, failed to authenticate - ERROR CODE: 1" << endl;
+        return;
+    }
+
+}
+
 
 
 std::string readConnection(){

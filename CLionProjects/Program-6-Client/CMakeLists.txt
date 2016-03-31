@@ -3,5 +3,5 @@ project(Program_6_Client)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES ClientExample.cpp)
+set(SOURCE_FILES Client.cpp Client.h)
 add_executable(Program_6_Client ${SOURCE_FILES})

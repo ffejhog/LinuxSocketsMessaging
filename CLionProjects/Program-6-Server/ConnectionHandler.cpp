@@ -8,40 +8,48 @@
 ConnectionHandler::ConnectionHandler(int ConnectedClientFileDescriptor){
     ClientFileDescriptor = ConnectedClientFileDescriptor;
 
-
-    int numOfAuthTries = 0;
-
-    //Client auth here before being passed to mainHandler
-    while(numOfAuthTries <3) {
-        std::string enteredUserName = readConnection();
-
-        std::string enteredPassword = readConnection();
-        if (enteredUserName != "" && enteredPassword != "") {
-            //check username and pass against all passwords
-
-            //if they arent in database
-            //then increment numOfAuthTries by one, otherwise success, set username to the entered username and set Authenticated to true. Also be sure to send success to client
-            //Also need to remember to send response to client if they fail all 3 tries
-        } else {
-            std::cout << "Error on auth read" << std::endl;
-            closeConnection();
-        }
-    }
-
-
+    std::string enteredCommand = readConnection();
+   switch(stoi(enteredCommand)) {
+       case 1:
+           loginHandler();
+           break;
+       case 2:
+           //newUser();
+       default:
+           return;
+   }
 
 }
+
+void ConnectionHandler::loginHandler(){
+    writeConnection("1"); // Letting client know Server is ready to recieve
+
+    std::string enteredUserName = readConnection();
+    std::string enteredPassword = readConnection();
+
+    //Check if valid stuff here
+
+    writeConnection("1"); //User is authenticated, let client know
+    authenticated = true;
+}
+
+
+
+
+
 
 bool ConnectionHandler::checkIfAuthenticated(){
     return authenticated;
 }
 
 void ConnectionHandler::mainHandler() {
-    int enteredCommand = atoi(readConnection().c_str());
+    int enteredCommand = stoi(readConnection());
     if(enteredCommand == 0){ //Check for success
         std::cout << "ERROR on client read" <<std::endl;
         closeConnection();
     }
+
+
     bool terminateConnection = false;
 
     while(!terminateConnection){

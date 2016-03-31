@@ -17,7 +17,9 @@ class ConnectionHandler {
         void closeConnection();
         void mainHandler();
         void option1Handler();
+        void loginHandler();
         bool checkIfAuthenticated();
+
 
     private:
         int ClientFileDescriptor;
