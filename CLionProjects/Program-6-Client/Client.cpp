@@ -20,12 +20,15 @@ int main(int argc, char *argv[])
     //0 - Use most appropriate connection method
 
     socketFileDescriptor = socket(AF_INET, SOCK_STREAM, 0);
-    if (socketFileDescriptor < 0)
+    if (socketFileDescriptor < 0) {
         cout << "ERROR opening socket" << endl;
+        return 0;
+    }
 
     if (server == NULL) {
         cout << "ERROR, no such host" << endl;
-        exit(0);
+        return 0;
+
     }
 
     bzero((char *) &server_address, sizeof(server_address)); //Sets all values of server_address to zero to prepare for listener
@@ -37,6 +40,7 @@ int main(int argc, char *argv[])
     //Make a connection to the server using the socket defined at socketFileDescriptor
     if (connect(socketFileDescriptor,(struct sockaddr *) &server_address,sizeof(server_address)) < 0) {
         cout << "ERROR connecting" << endl;
+        return 0;
     }
 
     mainClientHandler(); //Control handed to main File handler(THis is separate for simplicity purposes)

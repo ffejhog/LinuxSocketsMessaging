@@ -26,7 +26,7 @@ void ConnectionHandler::loginHandler(){
     writeConnection("1"); // Letting client know Server is ready to recieve
 
     std::string enteredUserName = readConnection();
-    std::string enteredPassword = readConnection();
+
 
     //Check if valid stuff here
 
@@ -44,7 +44,9 @@ bool ConnectionHandler::checkIfAuthenticated(){
 }
 
 void ConnectionHandler::mainHandler() {
-    int enteredCommand = stoi(readConnection());
+    std::string enteredCommand = readConnection();
+    int enteredCommandnum = std::stoi(enteredCommand);
+
     if(enteredCommand == 0){ //Check for success
         std::cout << "ERROR on client read" <<std::endl;
         closeConnection();
@@ -53,13 +55,6 @@ void ConnectionHandler::mainHandler() {
 
     bool terminateConnection = false;
 
-    while(!terminateConnection){
-
-        switch(enteredCommand){ //Handler for each of the 7 commands. If case is to quit then set terminateConnection to true
-
-        }
-
-    }
 
 }
 
