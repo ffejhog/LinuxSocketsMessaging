@@ -58,8 +58,9 @@ void mainClientHandler(){
         cout << "3. Exit" << endl;
 
         getline(cin, userinput);
+        int userinputnum = stoi(userinput);
 
-        switch (stoi(userinput)) {
+        switch (userinputnum) {
             case 1:
                 userLogin();
                 break;
@@ -73,13 +74,7 @@ void mainClientHandler(){
         }
         }while(!authenticated);
 
-        string test;
-        getline(cin, test);
-        writeConnection(test);
-
-        test = readConnection();
-
-        cout << endl << test << endl;
+        cout << "AUTHENTICATED" << endl;
 
 }
 
@@ -89,7 +84,7 @@ void userLogin(){
 
     writeConnection("1"); //Tell Server to prepare for login
     string serverResponse = readConnection(); //Retreive the servers response
-    if(serverResponse.compare("1")){
+    if(serverResponse == "1"){
         //server is good to receive
         cout << "Username: ";
         getline(cin, userName);
@@ -99,7 +94,7 @@ void userLogin(){
         writeConnection(userName);
         writeConnection(password);
         serverResponse = readConnection();
-        if(serverResponse.compare("1")){
+        if(serverResponse == "1"){
             cout << "Success! Logging in User..." << endl;
             authenticated = true;
             return;

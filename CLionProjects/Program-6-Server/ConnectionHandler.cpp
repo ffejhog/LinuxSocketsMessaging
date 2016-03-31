@@ -9,7 +9,8 @@ ConnectionHandler::ConnectionHandler(int ConnectedClientFileDescriptor){
     ClientFileDescriptor = ConnectedClientFileDescriptor;
 
     std::string enteredCommand = readConnection();
-   switch(stoi(enteredCommand)) {
+    int enteredCommandnum = stoi(enteredCommand);
+   switch(enteredCommandnum) {
        case 1:
            loginHandler();
            break;
