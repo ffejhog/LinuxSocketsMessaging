@@ -72,6 +72,7 @@ void mainClientHandler(){
                 //newUser();
                 break;
             case 3:
+                writeConnection("3");
                 return;
             default:
                 cout << "That is not a valid option" << endl << endl;
