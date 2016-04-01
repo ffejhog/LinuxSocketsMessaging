@@ -8,30 +8,54 @@
 ConnectionHandler::ConnectionHandler(int ConnectedClientFileDescriptor){
     ClientFileDescriptor = ConnectedClientFileDescriptor;
 
-    std::string enteredCommand = readConnection();
-    int enteredCommandnum = stoi(enteredCommand);
-   switch(enteredCommandnum) {
-       case 1:
-           loginHandler();
-           break;
-       case 2:
-           //newUser();
-       default:
-           return;
-   }
+
+    do {
+        std::string enteredCommand = readConnection();
+        int enteredCommandnum = stoi(enteredCommand);
+        switch (enteredCommandnum) {
+            case 1:
+                loginHandler();
+                break;
+            case 2:
+                //newUser();
+            default:
+                return;
+        }
+    }while(!authenticated);
 
 }
 
 void ConnectionHandler::loginHandler(){
     writeConnection("1"); // Letting client know Server is ready to recieve
 
-    std::string enteredUserName = readConnection();
+    string enteredUserName = readConnection();
+
+    fstream userDatabase;
+    userDatabase.open("data/users.bin", ios::in);
+    string readLine;
+
+    if (userDatabase.is_open()){
+        while ( getline (userDatabase,readLine) )
+        {
+            if(readLine == enteredUserName) {
+                authenticated = true;
+                break;
+            }
+        }
+        userDatabase.close();
+    }
 
 
+
+    if(authenticated){
+        writeConnection("1");//User is authenticated, let client know
+    }else{
+        writeConnection("0");//User is authenticated, let client know
+    }
     //Check if valid stuff here
 
-    writeConnection("1"); //User is authenticated, let client know
-    authenticated = true;
+
+
 }
 
 
