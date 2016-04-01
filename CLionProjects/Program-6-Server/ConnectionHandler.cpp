@@ -31,7 +31,7 @@ void ConnectionHandler::loginHandler(){
     string enteredUserName = readConnection();
 
     fstream userDatabase;
-    userDatabase.open("data/users.bin", ios::in);
+    userDatabase.open("/home/jeffrey/Documents/program-6/CLionProjects/Program-6-Server/data/users.bin", ios::in);
     string readLine;
 
     if (userDatabase.is_open()){
@@ -71,7 +71,7 @@ void ConnectionHandler::mainHandler() {
     std::string enteredCommand = readConnection();
     int enteredCommandnum = std::stoi(enteredCommand);
 
-    if(enteredCommand == 0){ //Check for success
+    if(enteredCommandnum == 0){ //Check for success
         std::cout << "ERROR on client read" <<std::endl;
         closeConnection();
     }
