@@ -21,7 +21,9 @@ class ConnectionHandler {
         void mainHandler();
         void option1Handler();
         void loginHandler();
+        void newUser();
         bool checkIfAuthenticated();
+
 
 
     private:

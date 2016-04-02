@@ -17,7 +17,8 @@ ConnectionHandler::ConnectionHandler(int ConnectedClientFileDescriptor){
                 loginHandler();
                 break;
             case 2:
-                //newUser();
+                newUser();
+                break;
             default:
                 return;
         }
@@ -58,7 +59,22 @@ void ConnectionHandler::loginHandler(){
 
 }
 
+void ConnectionHandler::newUser(){
+    writeConnection("1"); // Letting client know Server is ready to recieve
 
+    string enteredUserName = readConnection();
+
+    fstream userDatabase;
+    userDatabase.open("/home/jeffrey/Documents/program-6/CLionProjects/Program-6-Server/data/users.bin", ios::out | ios::app);
+
+
+    if (userDatabase.is_open()){
+        userDatabase << enteredUserName;
+    }
+
+    writeConnection("1");//User is authenticated, let client know
+
+}
 
 
 
