@@ -132,7 +132,7 @@ void newUser(){
         serverResponse = readConnection();
         if(serverResponse == "1"){
             cout << "Success! Please login with your new account..." << endl;
-            authenticated = true;
+
             return;
         }else{
             //User not valid
