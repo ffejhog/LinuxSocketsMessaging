@@ -69,9 +69,10 @@ void mainClientHandler(){
                 userLogin();
                 break;
             case 2:
-                //newUser();
+                newUser();
                 break;
             case 3:
+                writeConnection("3");
                 return;
             default:
                 cout << "That is not a valid option" << endl << endl;
@@ -112,6 +113,37 @@ void userLogin(){
         return;
     }
 
+}
+
+void newUser(){
+    string userName;
+    string password;
+
+    writeConnection("2"); //Tell Server to prepare for add user
+    string serverResponse = readConnection(); //Retreive the servers response
+    if(serverResponse == "1"){
+        //server is good to receive
+        cout << "Username: ";
+        getline(cin, userName);
+        cout << "Password: ";
+        getline(cin, password);
+        //Hash password here
+        writeConnection(userName + "|" + password);
+        serverResponse = readConnection();
+        if(serverResponse == "1"){
+            cout << "Success! Please login with your new account..." << endl;
+
+            return;
+        }else{
+            //User not valid
+            cout << "ERROR: User not added" << endl;
+            return;
+        }
+    }else{
+        //Server bad to receive, error
+        cout << "Error from server, failed to add user - ERROR CODE: 1" << endl;
+        return;
+    }
 }
 
 

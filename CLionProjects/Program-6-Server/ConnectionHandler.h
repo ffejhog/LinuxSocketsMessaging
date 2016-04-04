@@ -8,6 +8,9 @@
 #include <iostream>
 #include <string.h>
 #include <unistd.h>
+#include <fstream>
+
+using namespace std;
 
 class ConnectionHandler {
     public:
@@ -18,7 +21,9 @@ class ConnectionHandler {
         void mainHandler();
         void option1Handler();
         void loginHandler();
+        void newUser();
         bool checkIfAuthenticated();
+
 
 
     private:
