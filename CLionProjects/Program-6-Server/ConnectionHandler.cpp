@@ -134,6 +134,23 @@ void ConnectionHandler::option1Handler() {
 
 void ConnectionHandler::option2Handler() {
 	
+	// sends a 1 to the client to indicate the server is ready recieve a String
+	writeConnection("1");
+	
+	// stores the String from the client to newPartner
+	String newPartner = readConncetion();
+	
+	// opens or creates the file that is represents the current user's partners
+	fstream file(username + "Partners.txt");
+	
+	// a dash is concatenated to the begining of the String sent from the client to
+	// indicate the partner hasn't been accepted by the current user
+	newPartner = "-" + newPartner;
+	
+	// the String newPartner is inserted into the text file
+	newPartner >> file;
+	
+	// 1 is sent to the client to indicate that the server handled the String correctly
 	writeConnection("1");
 
 }
