@@ -140,18 +140,58 @@ void ConnectionHandler::option2Handler() {
 	// stores the String from the client to newPartner
 	String newPartner = readConncetion();
 	
-	// opens or creates the file that is represents the current user's partners
-	fstream file(username + "Partners.txt");
+	// opens/loads the users.txt file
+	fstream usersFile("users.txt");
+	// creates Strings representing the currentLine and each user from the database file
+	String currentLine, currentString;
+	// bool represents if there's a match in the user.txt file
+	bool userExists = false;
 	
-	// a dash is concatenated to the begining of the String sent from the client to
-	// indicate the partner hasn't been accepted by the current user
-	newPartner = "-" + newPartner;
+	// for loop checks each character for the '|' character which divides username from password in the file
+	while(file >> currentLine)	{
+		
+		// creates an empty String for each line
+		currentString = "";
+		
+		// for loop checks each character for the '|' character which divides username from password in the file
+		for(int i = 0; i < currentLine.length(); i++)
+		{
+			// once the '|' character is reached the for loop breaks
+			if(currentLine.charAt(i).compare('|'))
+				break;
+			// the current character is added to the String for each a username
+			currentString += currentLine.charAt(i);
+		}
+		
+		// conditional compares the current username to the partner from the client
+		if(newPartner.compare(currentString)) {
+			// bool assigned the value of true, and then breaks the while loop
+			userExists = true;
+			break;
+		}
+		
+	}
+
+	// conditional checks the value of the bool userExists and adds the partner from the client if its true 
+	if(userExists) {
+		// opens or creates the file that is represents the current user's partners
+		fstream partnersFile(username + "Partners.txt");
 	
-	// the String newPartner is inserted into the text file
-	newPartner >> file;
+		// a dash is concatenated to the begining of the String sent from the client to
+		// indicate the partner hasn't been accepted by the current user
+		newPartner = "-" + newPartner;
 	
-	// 1 is sent to the client to indicate that the server handled the String correctly
-	writeConnection("1");
+		// the String newPartner is inserted into the text file
+		newPartner >> partnersFile;
+	
+		// 1 is sent to the client to indicate that the server handled the String correctly
+		writeConnection("1");
+	}
+	else {
+		// 0 is sent to the client to indicate that the user sent as a partner doesn't exist
+		writeConnection("0");
+	}
+
 
 }
 
