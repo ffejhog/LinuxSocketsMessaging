@@ -99,7 +99,28 @@ void ConnectionHandler::mainHandler() {
 }
 
 void ConnectionHandler::option1Handler() {
-
+	
+	// loads file with usernames and passwords, and creates a string to hold the current line of the text file
+	fstream file("users.txt");
+	String currentLine;
+	
+	// prints the title to the list of usernames
+	cout << "List of Users:\n" << endl;
+	
+	// while loop loads each line of the file to currentLine one line at a time
+	while(file >> currentLine) {
+		// for loop checks each character for the '|" character which divides username from password in the file
+		for(int i = 0; i < currentLine.length(); i++)
+		{
+			// once the '|' character is reached the for loop breaks
+			if(currentLine.charAt(i).compare('|'))
+				break;
+			// the current character is printed which will form the complete current username when the loop is completed
+			cout << currentLine.charAt(i);
+		}
+		// new line printed
+		cout << endl;
+	}
 
 }
 
