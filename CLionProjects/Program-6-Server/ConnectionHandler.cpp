@@ -93,10 +93,12 @@ void ConnectionHandler::mainHandler() {
             closeConnection();
 	    break;
         }else if(enteredCommandnum == 1){
-	    option1Handler();
+			option1Handler();
         }else if(enteredCommandnum == 2){
-	    option2Handler();
-        }
+			option2Handler();
+        }else if(enteredCommandnum == 2){
+			option3Handler();
+		}
     }
 
     bool terminateConnection = false;
