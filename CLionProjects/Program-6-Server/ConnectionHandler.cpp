@@ -84,14 +84,20 @@ bool ConnectionHandler::checkIfAuthenticated(){
 }
 
 void ConnectionHandler::mainHandler() {
-    std::string enteredCommand = readConnection();
-    int enteredCommandnum = std::stoi(enteredCommand);
+        std::string enteredCommand;
+        while (enteredCommand = readConnection()){
+        int enteredCommandnum = std::stoi(enteredCommand);
 
-    if(enteredCommandnum == 0){ //Check for success
-        std::cout << "ERROR on client read" <<std::endl;
-        closeConnection();
+        if(enteredCommandnum == 0){ //Check for success
+            std::cout << "ERROR on client read" <<std::endl;
+            closeConnection();
+	    break;
+        }else if(enteredCommandnum == 1){
+	    option1Handler();
+        }else if(enteredCommandnum == 2){
+	    option2Handler();
+        }
     }
-
 
     bool terminateConnection = false;
 
