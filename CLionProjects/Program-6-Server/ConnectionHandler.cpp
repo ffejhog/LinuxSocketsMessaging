@@ -102,30 +102,35 @@ void ConnectionHandler::option1Handler() {
 	
 	// loads file with usernames and passwords, and creates a string to hold the current line of the text file
 	fstream file("users.txt");
-	String currentLine;
-	
-	// prints the title to the list of usernames
-	cout << "List of Users:\n" << endl;
+	String currentLine, currentString = "";
 	
 	// while loop loads each line of the file to currentLine one line at a time
 	while(file >> currentLine) {
-		// for loop checks each character for the '|" character which divides username from password in the file
+		// for loop checks each character for the '|' character which divides username from password in the file
 		for(int i = 0; i < currentLine.length(); i++)
 		{
 			// once the '|' character is reached the for loop breaks
 			if(currentLine.charAt(i).compare('|'))
 				break;
-			// the current character is printed which will form the complete current username when the loop is completed
-			cout << currentLine.charAt(i);
+			// the current character is added to the String of usernames that will be written to the client
+			currentString += currentLine.charAt(i);
 		}
-		// new line printed
-		cout << endl;
+		// a comma added to sepereate usernames in the String
+		currentString += ",";
 	}
+	// the String is terminated with a '|' character
+	currentString += "|";
+	
+	// the String of usernames is written to the client via the writeConnection function
+	writeConnection(currentString);
 
 }
 
+void ConnectionHandler::option2Handler() {
+	
+	writeConnection("1");
 
-
+}
 
 //TEST METHOD FOR TEST CLIENT
 
