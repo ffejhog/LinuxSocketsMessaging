@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
     mainClientHandler(); //Control handed to main File handler(THis is separate for simplicity purposes)
     if(authenticated) {
-        //authenticatedClientHandler();
+        mainHandler();
     }
     close(socketFileDescriptor);
     return 0;
@@ -79,7 +79,7 @@ void mainClientHandler(){
         }
         }while(!authenticated);
 
-	mainHandler();
+	
 
 
 
@@ -152,13 +152,42 @@ void  mainHandler(){
 //TODO: THIS METHOD --JEFF
 }
 
+/*
+ *  Procedure Name : option1Handler()
+ *  Author : Jeremy Polansky
+ *  Description : function for option 1 which outputs all registeres users
+ *  Arguments : none
+ */
 void option1Handler(){
-//PUT OPTION 1 STUFF HERE
-}
+    //assume server is now waiting to send list of registered users
+    String str=readConnection();
+    String newStr="";
+    for(int i=0; i<str.length();i++)
+    {
+        if(str.charAt(i)==','||str.charAt(i)!='|')
+        {
+            newStr+='\';
+            newStr+='n';
+            i++;
+        }//end if
+        else
+        {
+            newStr+=str.charAt(i);
+        }//end else
+        
+    }//end for
+
+    cout<<newStr;
+    
+    
+    
+}//end option1Handler
 
 void option2Handler(){
 //PUT OPTION 2 STUFF HERE
 }
+
+
 
 std::string readConnection(){
     ssize_t numOfCharRead;
