@@ -79,7 +79,9 @@ void mainClientHandler(){
         }
         }while(!authenticated);
 
-        cout << "AUTHENTICATED" << endl;
+	mainHandler();
+
+
 
 }
 
@@ -146,7 +148,17 @@ void newUser(){
     }
 }
 
+void  mainHandler(){
+//TODO: THIS METHOD --JEFF
+}
 
+void option1Handler(){
+//PUT OPTION 1 STUFF HERE
+}
+
+void option2Handler(){
+//PUT OPTION 2 STUFF HERE
+}
 
 std::string readConnection(){
     ssize_t numOfCharRead;
