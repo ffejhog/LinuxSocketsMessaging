@@ -32,8 +32,9 @@ void ConnectionHandler::loginHandler(){
     string enteredUserName = readConnection();
 
     fstream userDatabase;
-    userDatabase.open("/home/jeffrey/Documents/program-6/CLionProjects/Program-6-Server/data/users.bin", ios::in);
+    userDatabase.open("data/users.bin", ios::in);
     string readLine;
+
 
     if (userDatabase.is_open()){
         while ( getline (userDatabase,readLine) )
@@ -43,6 +44,7 @@ void ConnectionHandler::loginHandler(){
                 break;
             }
         }
+
         userDatabase.close();
     }
 
@@ -65,13 +67,14 @@ void ConnectionHandler::newUser(){
     string enteredUserName = readConnection();
 
     fstream userDatabase;
-    userDatabase.open("/home/jeffrey/Documents/program-6/CLionProjects/Program-6-Server/data/users.bin", ios::out | ios::app);
+    userDatabase.open("data/users.bin", ios::out | ios::app);
 
 
     if (userDatabase.is_open()){
-        userDatabase << enteredUserName;
+        userDatabase << enteredUserName << endl;
     }
 
+    userDatabase.close();
     writeConnection("1");//User is authenticated, let client know
 
 }
@@ -85,20 +88,24 @@ bool ConnectionHandler::checkIfAuthenticated(){
 
 void ConnectionHandler::mainHandler() {
         std::string enteredCommand;
-        while (enteredCommand = readConnection()){
-        int enteredCommandnum = std::stoi(enteredCommand);
+        while (1){
+            enteredCommand = "0";
+            enteredCommand = readConnection();
+            int enteredCommandnum = std::stoi(enteredCommand);
 
-        if(enteredCommandnum == 0){ //Check for success
-            std::cout << "ERROR on client read" <<std::endl;
-            closeConnection();
-	    break;
-        }else if(enteredCommandnum == 1){
-			option1Handler();
-        }else if(enteredCommandnum == 2){
-			option2Handler();
-        }else if(enteredCommandnum == 2){
-			option3Handler();
-		}
+            if(enteredCommandnum == 0){ //Check for success
+                std::cout << "ERROR on client read" <<std::endl;
+                closeConnection();
+	            break;
+            }else if(enteredCommandnum == 1){
+			    option1Handler();
+            }else if(enteredCommandnum == 2){
+			    option2Handler();
+            }else if(enteredCommandnum == 3){
+			    //option3Handler();
+		    }else if(enteredCommandnum == 8){
+                return;
+            }
     }
 
     bool terminateConnection = false;
@@ -107,85 +114,88 @@ void ConnectionHandler::mainHandler() {
 }
 
 void ConnectionHandler::option1Handler() {
-	
+
 	// loads file with usernames and passwords, and creates a string to hold the current line of the text file
-	fstream file("users.txt");
-	String currentLine, currentString = "";
-	
+    fstream file;
+    file.open("data/users.bin", ios::in);
+	string currentLine, currentString;
+
 	// while loop loads each line of the file to currentLine one line at a time
-	while(file >> currentLine) {
-		// for loop checks each character for the '|' character which divides username from password in the file
-		for(int i = 0; i < currentLine.length(); i++)
-		{
-			// once the '|' character is reached the for loop breaks
-			if(currentLine.charAt(i).compare('|'))
-				break;
-			// the current character is added to the String of usernames that will be written to the client
-			currentString += currentLine.charAt(i);
-		}
-		// a comma added to sepereate usernames in the String
-		currentString += ",";
-	}
-	// the String is terminated with a '|' character
-	currentString += "|";
-	
-	// the String of usernames is written to the client via the writeConnection function
-	writeConnection(currentString);
+    if(file.is_open()) {
+        while ( getline (file,currentLine) ) {
+            cout << currentLine;
+            // for loop checks each character for the '|' character which divides username from password in the file
+            for (int i = 0; i < currentLine.length(); i++) {
+                // once the '|' character is reached the for loop breaks
+                if (currentLine.at(i) == '|')
+                    break;
+                // the current character is added to the String of usernames that will be written to the client
+                currentString += currentLine.at(i);
+            }
+            // a comma added to sepereate usernames in the String
+            currentString += ",";
+        }
+        // the String is terminated with a '|' character
+        currentString += "|";
+
+        // the String of usernames is written to the client via the writeConnection function
+        writeConnection(currentString);
+    }
 
 }
 
 void ConnectionHandler::option2Handler() {
-	
+
 	// sends a 1 to the client to indicate the server is ready recieve a String
 	writeConnection("1");
-	
+
 	// stores the String from the client to newPartner
-	String newPartner = readConncetion();
-	
+	string newPartner = readConnection();
+
 	// opens/loads the users.txt file
-	fstream usersFile("users.txt");
+	fstream usersFile("data/users.txt");
 	// creates Strings representing the currentLine and each user from the database file
-	String currentLine, currentString;
+	string currentLine, currentString;
 	// bool represents if there's a match in the user.txt file
 	bool userExists = false;
-	
+
 	// for loop checks each character for the '|' character which divides username from password in the file
-	while(file >> currentLine)	{
-		
+	while(usersFile >> currentLine)	{
+
 		// creates an empty String for each line
 		currentString = "";
-		
+
 		// for loop checks each character for the '|' character which divides username from password in the file
 		for(int i = 0; i < currentLine.length(); i++)
 		{
 			// once the '|' character is reached the for loop breaks
-			if(currentLine.charAt(i).compare('|'))
+			if(currentLine.at(i) == '|')
 				break;
 			// the current character is added to the String for each a username
-			currentString += currentLine.charAt(i);
+			currentString += currentLine.at(i);
 		}
-		
+
 		// conditional compares the current username to the partner from the client
 		if(newPartner.compare(currentString)) {
 			// bool assigned the value of true, and then breaks the while loop
 			userExists = true;
 			break;
 		}
-		
+
 	}
 
-	// conditional checks the value of the bool userExists and adds the partner from the client if its true 
+	// conditional checks the value of the bool userExists and adds the partner from the client if its true
 	if(userExists) {
 		// opens or creates the file that is represents the current user's partners
-		fstream partnersFile(username + "Partners.txt");
-	
+		fstream partnersFile(userName + "Partners.txt");
+
 		// a dash is concatenated to the begining of the String sent from the client to
 		// indicate the partner hasn't been accepted by the current user
 		newPartner = "-" + newPartner;
-	
+
 		// the String newPartner is inserted into the text file
-		newPartner >> partnersFile;
-	
+        partnersFile << newPartner;
+
 		// 1 is sent to the client to indicate that the server handled the String correctly
 		writeConnection("1");
 	}

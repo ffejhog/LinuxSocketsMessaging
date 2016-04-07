@@ -86,6 +86,7 @@ void *connection_handler(void *client_socket_desc){
         clienthandler.closeConnection();
     }else{
         clienthandler.mainHandler();
+        clienthandler.closeConnection();
     }
 
     return 0;

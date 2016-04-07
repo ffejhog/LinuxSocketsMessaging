@@ -20,6 +20,8 @@ class ConnectionHandler {
         void closeConnection();
         void mainHandler();
         void option1Handler();
+        void option2Handler();
+        void option3Handler();
         void loginHandler();
         void newUser();
         bool checkIfAuthenticated();
