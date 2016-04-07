@@ -22,7 +22,10 @@ int writeConnection(std::string dataToWrite);
 void mainClientHandler();
 void userLogin();
 void newUser();
-void authenticatedClientHandler();
+void option1Handler();
+void option2Handler();
+void option3Handler();
+void mainHandler();
 
 int socketFileDescriptor; //File discription for socket used to make connection
 char buffer[256]; //Buffer to store data for receive

@@ -20,6 +20,8 @@ class ConnectionHandler {
         void closeConnection();
         void mainHandler();
         void option1Handler();
+        void option2Handler();
+        void option3Handler();
         void loginHandler();
         void newUser();
         bool checkIfAuthenticated();
@@ -34,6 +36,7 @@ class ConnectionHandler {
         std::string userName;
         std::string readConnection();
         int writeConnection(std::string dataToWrite);
+        const string FILE_NAME_USERS = "/home/jeffrey/Documents/program-6/CLionProjects/Program-6-Server/data/users.bin";
 };
 
 
