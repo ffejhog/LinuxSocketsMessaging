@@ -32,7 +32,7 @@ void ConnectionHandler::loginHandler(){
     string enteredUserName = readConnection();
 
     fstream userDatabase;
-    userDatabase.open("data/users.bin", ios::in);
+    userDatabase.open(FILE_NAME_USERS, ios::in);
     string readLine;
 
 
@@ -67,7 +67,7 @@ void ConnectionHandler::newUser(){
     string enteredUserName = readConnection();
 
     fstream userDatabase;
-    userDatabase.open("data/users.bin", ios::out | ios::app);
+    userDatabase.open(FILE_NAME_USERS, ios::out | ios::app);
 
 
     if (userDatabase.is_open()){
@@ -115,15 +115,14 @@ void ConnectionHandler::mainHandler() {
 
 void ConnectionHandler::option1Handler() {
 
-	// loads file with usernames and passwords, and creates a string to hold the current line of the text file
-    fstream file;
-    file.open("data/users.bin", ios::in);
-	string currentLine, currentString;
+    fstream usersFile;
+    usersFile.open(FILE_NAME_USERS, ios::in | ios::out);
+    string currentLine, currentString;
 
-	// while loop loads each line of the file to currentLine one line at a time
-    if(file.is_open()) {
-        while ( getline (file,currentLine) ) {
-            cout << currentLine;
+    // while loop loads each line of the file to currentLine one line at a time
+    if(usersFile.is_open() && usersFile.good()) {
+        while ( getline (usersFile,currentLine) ) {
+
             // for loop checks each character for the '|' character which divides username from password in the file
             for (int i = 0; i < currentLine.length(); i++) {
                 // once the '|' character is reached the for loop breaks
@@ -153,14 +152,14 @@ void ConnectionHandler::option2Handler() {
 	string newPartner = readConnection();
 
 	// opens/loads the users.txt file
-	fstream usersFile("data/users.txt");
+	fstream usersFile(FILE_NAME_USERS);
 	// creates Strings representing the currentLine and each user from the database file
 	string currentLine, currentString;
 	// bool represents if there's a match in the user.txt file
 	bool userExists = false;
 
 	// for loop checks each character for the '|' character which divides username from password in the file
-	while(usersFile >> currentLine)	{
+	while(getline(usersFile, currentLine) )	{
 
 		// creates an empty String for each line
 		currentString = "";
