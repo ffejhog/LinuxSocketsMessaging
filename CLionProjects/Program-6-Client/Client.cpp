@@ -154,10 +154,25 @@ void  mainHandler(){
 
 void option1Handler(){
 //PUT OPTION 1 STUFF HERE
+
 }
 
 void option2Handler(){
 //PUT OPTION 2 STUFF HERE
+    //Receiving "1" from server
+    string status = readConnection();
+
+    if (status == "1")
+    {
+        cout << "Received...Returning a name...BOB " << endl;
+        writeConnection("BOB");
+    }
+        cout << "ERROR! Did not receive from server" <<endl;
+}
+
+void option3Handler(){
+
+
 }
 
 std::string readConnection(){
