@@ -152,6 +152,12 @@ void  mainHandler(){
 //TODO: THIS METHOD --JEFF
 }
 
+
+/*	Proceedure: void option1Handler()
+ *	Author: Jeremy Polansky
+ *	Description: Reads string info from server till a | deliminator, then formats and outputs to screen
+ *	Arguments: NONE
+ */
 void option1Handler(){
     //take in string, replace all commans with new lines, delete pipeline deliminator, output
     string str=readConnection();
@@ -174,7 +180,7 @@ void option1Handler(){
             i++;
         }//end else
     }//end while
-    cout<<newStr,,endl;
+    cout<<newStr<<endl;
     
     
 //PUT OPTION 1 STUFF HERE
