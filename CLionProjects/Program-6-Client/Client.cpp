@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
     mainClientHandler(); //Control handed to main File handler(THis is separate for simplicity purposes)
     if(authenticated) {
-        //authenticatedClientHandler();
+        mainHandler();
     }
     close(socketFileDescriptor);
     return 0;
@@ -79,8 +79,6 @@ void mainClientHandler(){
         }
         }while(!authenticated);
 
-
-	mainHandler();
 
 
 
@@ -151,8 +149,37 @@ void newUser(){
 }
 
 void  mainHandler(){
-//TODO: THIS METHOD --JEFF
+    while(1) {
+	cout << "Please Choose...  " << endl;
+    cout << "1. Command 1" << endl;
+    cout << "2. Command 2" << endl;
+    cout << "3. Command 3" << endl;
+    string userinput;
+    getline(cin, userinput);
+    int userinputnum = stoi(userinput);
+
+        switch (userinputnum) {
+            case 1:
+                writeConnection("1");
+                option1Handler();
+                break;
+            case 2:
+                writeConnection("2");
+                option2Handler();
+                break;
+            case 3:
+                writeConnection("3");
+                //option3Handler();
+                break;
+            case 8:
+                writeConnection("8");
+                return;
+            default:
+                cout << "That is not a valid option" << endl << endl;
+        }
+    }
 }
+
 
 void option1Handler(){
 }
