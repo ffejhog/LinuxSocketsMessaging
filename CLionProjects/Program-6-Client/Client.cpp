@@ -168,6 +168,10 @@ void option2Handler(){
         cout << "ERROR!" <<endl;
 }
 
+void option3Handler(){
+    //PUT OPTION 3 STUFF HERE
+
+}
 std::string readConnection(){
     ssize_t numOfCharRead;
     bzero(buffer,256); //Zero out the buffer
