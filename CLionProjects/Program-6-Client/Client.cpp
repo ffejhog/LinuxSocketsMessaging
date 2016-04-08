@@ -168,10 +168,31 @@ void option2Handler(){
         cout << "ERROR!" <<endl;
 }
 
-void option3Handler(){
+void option3Handler() {
     //PUT OPTION 3 STUFF HERE
+    string list = readConnection();
+    string choice = "";
 
+    char *token = std::strok(list, ",");
+    while (token != ",")
+    {
+        cout << token << endl;
+    }
+
+    cout << "1 = Accept Request || 0 = Decline Request" << endl;
+    cin >> choice;
+    if (choice == "1")
+    {
+        cout << "Accepted" << endl;
+        writeConnection("Accepted");
+    }
+    else if (choice == "0")
+    {
+        cout << "Declined " << endl;
+        writeConnection("Declined");
+    }
 }
+
 std::string readConnection(){
     ssize_t numOfCharRead;
     bzero(buffer,256); //Zero out the buffer
