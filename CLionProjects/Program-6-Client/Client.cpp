@@ -158,6 +158,14 @@ void option1Handler(){
 
 void option2Handler(){
 //PUT OPTION 2 STUFF HERE
+    string status = readConnection();
+    if (status == "1")
+    {
+        cout << "Received...Sending BOB" << endl;
+        writeConnection("BOB");
+    }
+    else if (status == "0");
+        cout << "ERROR!" <<endl;
 }
 
 std::string readConnection(){
