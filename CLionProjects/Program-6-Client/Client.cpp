@@ -153,6 +153,30 @@ void  mainHandler(){
 }
 
 void option1Handler(){
+    //take in string, replace all commans with new lines, delete pipeline deliminator, output
+    string str=readConnection();
+    while(str.charAt(str.getLength())!='|')
+    {
+        str+=readConnection();
+    }//end while
+    int i=0;
+    string newStr="";
+    while(str.charAt(i)!='|')
+    {
+        if(str.chatAt(i)==',')
+        {
+            newStr+="\n";
+            i+=2;
+        }//end if
+        else
+        {
+            newStr+=str.charAt(i);
+            i++;
+        }//end else
+    }//end while
+    cout<<newStr,,endl;
+    
+    
 //PUT OPTION 1 STUFF HERE
 }
 
