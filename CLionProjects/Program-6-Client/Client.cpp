@@ -154,7 +154,6 @@ void  mainHandler(){
 
 void option1Handler(){
 //PUT OPTION 1 STUFF HERE
-
 }
 
 void option2Handler(){
@@ -162,36 +161,11 @@ void option2Handler(){
     string status = readConnection();
     if (status == "1")
     {
-        cout << "Received...Sending BOB..." << endl;
+        cout << "Received...Sending BOB" << endl;
         writeConnection("BOB");
     }
     else if (status == "0");
         cout << "ERROR!" <<endl;
-}
-
-void optionHandler() {
-    //PUT OPTION 3 STUFF HERE
-    string list = readConnection();
-    string choice = "";
-
-    char *token = std::strok(list, ",");
-    while (token != ",")
-    {
-    cout << token << endl;
-    }
-
-    cout << "1 = Accept Request || 0 = Decline Request" << endl;
-    cin >> choice;
-    if (choice == "1")
-    {
-        cout << "Accepted" << endl;
-        writeConnection("Accepted");
-    }
-    else if (choice == "0")
-    {
-        cout << "Declined " << endl;
-        writeConnection("Declined");
-    }
 }
 
 std::string readConnection(){
