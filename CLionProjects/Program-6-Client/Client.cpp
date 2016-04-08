@@ -79,7 +79,9 @@ void mainClientHandler(){
         }
         }while(!authenticated);
 
+
 	mainHandler();
+
 
 
 
@@ -153,8 +155,31 @@ void  mainHandler(){
 }
 
 void option1Handler(){
-//PUT OPTION 1 STUFF HERE
 }
+
+    //assume server is now waiting to send list of registered users
+    string str = readConnection();
+    string newStr = "";
+    for(int i=0; i<str.length();i++)
+    {
+        if(str.at(i)==',' || str.at(i)=='|')
+        {
+            newStr+='\n';
+
+        }//end if
+        else
+        {
+            newStr+=str.at(i);
+        }//end else
+
+    }//end for
+
+    cout << newStr;
+
+
+
+}//end option1Handler
+
 
 void option2Handler(){
 //PUT OPTION 2 STUFF HERE

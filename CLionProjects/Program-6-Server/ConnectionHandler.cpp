@@ -41,14 +41,15 @@ void ConnectionHandler::loginHandler(){
         {
             if(readLine == enteredUserName) {
                 authenticated = true;
+                userName = enteredUserName;
                 break;
             }
         }
 
-        userDatabase.close();
+
     }
-
-
+    userDatabase.flush();
+    userDatabase.close();
 
     if(authenticated){
         writeConnection("1");//User is authenticated, let client know
@@ -116,9 +117,9 @@ void ConnectionHandler::mainHandler() {
 void ConnectionHandler::option1Handler() {
 
     fstream usersFile;
-    usersFile.open(FILE_NAME_USERS, ios::in | ios::out);
+    usersFile.open(FILE_NAME_USERS, ios::in);
     string currentLine, currentString;
-
+    usersFile.clear();
     // while loop loads each line of the file to currentLine one line at a time
     if(usersFile.is_open() && usersFile.good()) {
         while ( getline (usersFile,currentLine) ) {
@@ -137,6 +138,7 @@ void ConnectionHandler::option1Handler() {
         // the String is terminated with a '|' character
         currentString += "|";
 
+        cout << currentString << endl;
         // the String of usernames is written to the client via the writeConnection function
         writeConnection(currentString);
     }
