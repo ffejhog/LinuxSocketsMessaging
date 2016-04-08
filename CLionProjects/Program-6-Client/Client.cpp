@@ -182,8 +182,6 @@ void  mainHandler(){
 
 
 void option1Handler(){
-}
-
     //assume server is now waiting to send list of registered users
     string str = readConnection();
     string newStr = "";
@@ -206,6 +204,7 @@ void option1Handler(){
 
 
 }//end option1Handler
+
 
 
 void option2Handler(){
