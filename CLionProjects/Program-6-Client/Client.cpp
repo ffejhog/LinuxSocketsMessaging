@@ -148,8 +148,33 @@ void newUser(){
     }
 }
 
-void  mainHandler(){
-//TODO: THIS METHOD --JEFF
+void mainClientHandler(){
+    string userinput;
+
+    do {
+        cout << "Please Choose...  " << endl;
+        cout << "1. Login" << endl;
+        cout << "2. Create New User" << endl;
+        cout << "3. Exit" << endl;
+
+        getline(cin, userinput);
+        int userinputnum = stoi(userinput);
+
+        switch (userinputnum) {
+            case 1:
+                userLogin();
+                break;
+            case 2:
+                newUser();
+                break;
+            case 3:
+                writeConnection("3");
+                return;
+            default:
+                cout << "That is not a valid option" << endl << endl;
+        }
+        }while(!authenticated);
+
 }
 
 
