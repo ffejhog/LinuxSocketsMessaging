@@ -97,8 +97,8 @@ void userLogin(){
         getline(cin, userName);
         cout << "Password: ";
         getline(cin, password);
-        //Hash password here
-        writeConnection(userName + "|" + password);
+        
+        writeConnection(userName + "|" + str_hash(password));
         serverResponse = readConnection();
         if(serverResponse == "1"){
             cout << "Success! Logging in User..." << endl;
@@ -130,7 +130,8 @@ void newUser(){
         cout << "Password: ";
         getline(cin, password);
         //Hash password here
-        writeConnection(userName + "|" + password);
+
+        writeConnection(userName + "|" + str_hash(password));
         serverResponse = readConnection();
         if(serverResponse == "1"){
             cout << "Success! Please login with your new account..." << endl;

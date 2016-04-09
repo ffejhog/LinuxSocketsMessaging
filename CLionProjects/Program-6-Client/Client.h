@@ -14,11 +14,13 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <functional>
 
 using namespace std;
 
 std::string readConnection();
 int writeConnection(std::string dataToWrite);
+hash<std::string> str_hash;
 void mainClientHandler();
 void userLogin();
 void newUser();
