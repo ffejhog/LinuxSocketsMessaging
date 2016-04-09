@@ -219,8 +219,18 @@ void option2Handler(){
         cout << "Received...Sending BOB" << endl;
         writeConnection("BOB");
     }
-    else if (status == "0");
+    else{
         cout << "ERROR!" <<endl;
+	}
+	
+	status = readConnection();
+	if (status == "1")
+    {
+        cout << "You are now partnered with <USER" <<endl;
+    }
+    else{
+        cout << "user does not Exist!" <<endl;
+	}
 }
 
 void option3Handler() {
