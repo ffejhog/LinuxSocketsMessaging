@@ -32,7 +32,7 @@ void ConnectionHandler::loginHandler(){
     string enteredUserName = readConnection();
 
     fstream userDatabase;
-    userDatabase.open(FILE_NAME_USERS, ios::in);
+    userDatabase.open(FILE_NAME_DIR+"users.bin", ios::in);
     string readLine;
 
 
@@ -41,7 +41,16 @@ void ConnectionHandler::loginHandler(){
         {
             if(readLine == enteredUserName) {
                 authenticated = true;
-                userName = enteredUserName;
+
+                for(int i = 0; i < enteredUserName.length(); i++)
+                {
+                    // once the '|' character is reached the for loop breaks
+                    if(enteredUserName.at(i) == '|')
+                        break;
+                    // the current character is added to the String for each a username
+                    userName += enteredUserName.at(i);
+                }
+
                 break;
             }
         }
@@ -68,7 +77,7 @@ void ConnectionHandler::newUser(){
     string enteredUserName = readConnection();
 
     fstream userDatabase;
-    userDatabase.open(FILE_NAME_USERS, ios::out | ios::app);
+    userDatabase.open(FILE_NAME_DIR+"users.bin", ios::out | ios::app);
 
 
     if (userDatabase.is_open()){
@@ -117,7 +126,7 @@ void ConnectionHandler::mainHandler() {
 void ConnectionHandler::option1Handler() {
 
     fstream usersFile;
-    usersFile.open(FILE_NAME_USERS, ios::in);
+    usersFile.open(FILE_NAME_DIR+"users.bin", ios::in);
     string currentLine, currentString;
     usersFile.clear();
     // while loop loads each line of the file to currentLine one line at a time
@@ -154,7 +163,7 @@ void ConnectionHandler::option2Handler() {
 	string newPartner = readConnection();
 
 	// opens/loads the users.txt file
-	fstream usersFile(FILE_NAME_USERS);
+	fstream usersFile(FILE_NAME_DIR+"users.bin", ios::in);
 	// creates Strings representing the currentLine and each user from the database file
 	string currentLine, currentString;
 	// bool represents if there's a match in the user.txt file
@@ -177,7 +186,7 @@ void ConnectionHandler::option2Handler() {
 		}
 
 		// conditional compares the current username to the partner from the client
-		if(newPartner.compare(currentString)) {
+		if(newPartner == currentString) {
 			// bool assigned the value of true, and then breaks the while loop
 			userExists = true;
 			break;
@@ -188,7 +197,7 @@ void ConnectionHandler::option2Handler() {
 	// conditional checks the value of the bool userExists and adds the partner from the client if its true
 	if(userExists) {
 		// opens or creates the file that is represents the current user's partners
-		fstream partnersFile(userName + "Partners.txt");
+		fstream partnersFile(FILE_NAME_DIR + userName+ "_Partners.txt", ios::app | ios::out);
 
 		// a dash is concatenated to the begining of the String sent from the client to
 		// indicate the partner hasn't been accepted by the current user

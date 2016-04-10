@@ -37,7 +37,7 @@ class ConnectionHandler {
         std::string readConnection();
         int writeConnection(std::string dataToWrite);
 
-        const string FILE_NAME_USERS = "/home/jeffrey/Documents/program-6/CLionProjects/Program-6-Server/data/users.bin";
+        const string FILE_NAME_DIR = "/home/jeffrey/Documents/program-6/CLionProjects/Program-6-Server/data/";
 };
 
 

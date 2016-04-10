@@ -97,8 +97,8 @@ void userLogin(){
         getline(cin, userName);
         cout << "Password: ";
         getline(cin, password);
-        
-        writeConnection(userName + "|" + str_hash(password));
+
+        writeConnection(userName + "|" + to_string(passHash(password.c_str(),HASH_SEED)));
         serverResponse = readConnection();
         if(serverResponse == "1"){
             cout << "Success! Logging in User..." << endl;
@@ -131,7 +131,7 @@ void newUser(){
         getline(cin, password);
         //Hash password here
 
-        writeConnection(userName + "|" + str_hash(password));
+        writeConnection(userName + "|" + to_string(passHash(password.c_str(),HASH_SEED)));
         serverResponse = readConnection();
         if(serverResponse == "1"){
             cout << "Success! Please login with your new account..." << endl;
@@ -149,34 +149,39 @@ void newUser(){
     }
 }
 
-void mainClientHandler(){
-    string userinput;
-
-    do {
+void  mainHandler(){
+    while(1) {
         cout << "Please Choose...  " << endl;
-        cout << "1. Login" << endl;
-        cout << "2. Create New User" << endl;
-        cout << "3. Exit" << endl;
-
+        cout << "1. Command 1" << endl;
+        cout << "2. Command 2" << endl;
+        cout << "3. Command 3" << endl;
+        string userinput;
         getline(cin, userinput);
         int userinputnum = stoi(userinput);
 
         switch (userinputnum) {
             case 1:
-                userLogin();
+                writeConnection("1");
+                option1Handler();
                 break;
             case 2:
-                newUser();
+                writeConnection("2");
+                option2Handler();
                 break;
             case 3:
                 writeConnection("3");
+               // option3Handler();
+                break;
+            case 8:
+                writeConnection("8");
                 return;
             default:
                 cout << "That is not a valid option" << endl << endl;
         }
-        }while(!authenticated);
-
+    }
 }
+
+
 
 
 /*	Proceedure: void option1Handler()
@@ -185,32 +190,30 @@ void mainClientHandler(){
  *	Arguments: NONE
  */
 void option1Handler(){
-    //take in string, replace all commans with new lines, delete pipeline deliminator, output
-    string str=readConnection();
-    while(str.charAt(str.getLength())!='|')
+    //assume server is now waiting to send list of registered users
+    string str = readConnection();
+    string newStr = "";
+    for(int i=0; i<str.length();i++)
     {
-        str+=readConnection();
-    }//end while
-    int i=0;
-    string newStr="";
-    while(str.charAt(i)!='|')
-    {
-        if(str.chatAt(i)==',')
+        if(str.at(i)==',' || str.at(i)=='|')
         {
-            newStr+="\n";
-            i+=2;
+            newStr+='\n';
+
         }//end if
         else
         {
-            newStr+=str.charAt(i);
-            i++;
+            newStr+=str.at(i);
         }//end else
-    }//end while
-    cout<<newStr<<endl;
-    
-    
-//PUT OPTION 1 STUFF HERE
-}
+
+    }//end for
+
+    cout << newStr;
+
+
+
+}//end option1Handler
+
+
 
 void option2Handler(){
 //PUT OPTION 2 STUFF HERE
@@ -218,7 +221,7 @@ void option2Handler(){
     if (status == "1")
     {
         cout << "Received...Sending BOB" << endl;
-        writeConnection("BOB");
+        writeConnection("jeff");
     }
     else{
         cout << "ERROR!" <<endl;
@@ -234,12 +237,11 @@ void option2Handler(){
 	}
 }
 
-void option3Handler() {
+/*void option3Handler() {
     //PUT OPTION 3 STUFF HERE
     string list = readConnection();
     string choice = "";
-
-    char *token = std::strok(list, ",");
+   char *token = strtok(list.c_str(), ",");
     while (token != ",")
     {
         cout << token << endl;
@@ -257,7 +259,7 @@ void option3Handler() {
         cout << "Declined " << endl;
         writeConnection("Declined");
     }
-}
+}*/
 
 std::string readConnection(){
     ssize_t numOfCharRead;
@@ -279,4 +281,13 @@ int writeConnection(std::string dataToWrite){
         return -1;
     }
     return 0;
+}
+
+unsigned int passHash(const char* s, unsigned int seed) {
+    unsigned int hash = seed;
+    while (*s)
+    {
+        hash = hash * 101  +  *s++;
+    }
+    return hash;
 }

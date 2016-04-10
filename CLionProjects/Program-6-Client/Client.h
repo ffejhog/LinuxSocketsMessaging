@@ -18,9 +18,10 @@
 
 using namespace std;
 
+const unsigned int HASH_SEED = 546954645;
 std::string readConnection();
 int writeConnection(std::string dataToWrite);
-hash<std::string> str_hash;
+unsigned int passHash(const char* s, unsigned int seed);
 void mainClientHandler();
 void userLogin();
 void newUser();
