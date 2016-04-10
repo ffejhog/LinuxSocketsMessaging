@@ -285,6 +285,34 @@ void ConnectionHandler::option3Handler() {
 	
 }
 
+void ConnectionHandler::option4Handler() {
+
+    fstream usersFile;
+	fstream usersFile(FILE_NAME_DIR + userName+ "_Partners.txt", ios::in);
+    String currentLine, currentString;
+    usersFile.clear();
+    // while loop loads each line of the file to currentLine one line at a time
+    if(usersFile.is_open() && usersFile.good()) {
+        while ( getline (usersFile,currentLine) ) {
+
+            // for loop checks each character for the '|' character which divides username from password in the file
+            for (int i = 0; i < currentLine.length(); i++) {
+                // the current character is added to the String of usernames that will be written to the client
+                currentString += currentLine.at(i);
+            }
+            // a comma added to sepereate usernames in the String
+            currentString += ",";
+        }
+        // the String is terminated with a '|' character
+        currentString += "|";
+
+        cout << currentString << endl;
+        // the String of usernames is written to the client via the writeConnection function
+        writeConnection(currentString);
+    }
+
+}
+
 //TEST METHOD FOR TEST CLIENT
 
 void ConnectionHandler::Test1Method(){
