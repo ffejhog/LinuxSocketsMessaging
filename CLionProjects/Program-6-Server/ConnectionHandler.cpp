@@ -186,7 +186,7 @@ void ConnectionHandler::option2Handler() {
 		}
 
 		// conditional compares the current username to the partner from the client
-		if(newPartner == currentString) {
+		if(newPartner.compare(currentString) {
 			// bool assigned the value of true, and then breaks the while loop
 			userExists = true;
 			break;
@@ -197,11 +197,7 @@ void ConnectionHandler::option2Handler() {
 	// conditional checks the value of the bool userExists and adds the partner from the client if its true
 	if(userExists) {
 		// opens or creates the file that is represents the current user's partners
-		fstream partnersFile(FILE_NAME_DIR + userName+ "_Partners.txt", ios::app | ios::out);
-
-		// a dash is concatenated to the begining of the String sent from the client to
-		// indicate the partner hasn't been accepted by the current user
-		newPartner = "-" + newPartner;
+		fstream partnersFile(FILE_NAME_DIR + userName+ "_PartnerRequests.txt", ios::app | ios::out);
 
 		// the String newPartner is inserted into the text file
         partnersFile << newPartner;
@@ -215,6 +211,78 @@ void ConnectionHandler::option2Handler() {
 	}
 
 
+}
+
+void ConnectionHandler::option3Handler() {
+	
+	// opens/loads the partnersRequests file, and the partners file
+	fstream usersFile(FILE_NAME_DIR + userName+ "_PartnerRequests.txt", ios::in);
+	fstream partnersFile(FILE_NAME_DIR + userName+ "_Partners.txt", ios::app | ios::out);
+
+	// creates Strings representing the currentLine and each user from the database file
+	string currentLine, currentString ="";
+
+	// while loop reads each line of the partnersRequests file
+	while(getline(usersFile, currentLine) )	{
+
+		// for loop checks each character for the '|' character which divides username from password in the file
+		for(int i = 0; i < currentLine.length(); i++)
+		{
+			// once the '|' character is reached the for loop breaks
+			if(currentLine.at(i) == '|')
+				break;
+			// the current character is added to the String for each a username
+			currentString += currentLine.at(i);
+		}
+		
+		// people are seperated by commas in the String based list
+		currentString += ",";
+	}
+	
+	// String is deliminated by a | character
+	currentString += "|";
+	
+	// String is written to the client
+	writeConnection(currentString);
+	
+	// String is read from the client, and bool is used to determine if the user accepted or rejected
+	String newPartner = readConnection();
+	bool accepted = newPartner.at(newPartner.size() - 1) == 'a';
+				
+	// conditional does nothing if 0 is returned, or the value of accepted is false
+	if(newPartner.compare("0") || !accepted) { }	
+	else {
+		// for loop removes the | and a or r from the end of the returned String
+		for(int i = 0; i < currentLine.length(); i++)
+			if(currentLine.at(i) == '|')
+				newPartner = newPartner.substr(0, i);
+		
+		// for loop checks each character for the '|' character which divides username from password in the file
+		while(getline(usersFile, String currentLine) )	{
+
+			// creates an empty String for each line
+			currentString = "";
+
+			// for loop checks each character for the '|' character which divides username from password in the file
+			for(int i = 0; i < currentLine.length(); i++)
+				{
+				// once the '|' character is reached the for loop breaks
+					if(currentLine.at(i) == '|')
+						break;
+					// the current character is added to the String for each a username
+					currentString += currentLine.at(i);
+				}
+
+			// conditional compares the current username to the partner from the client client
+			if(newPartner.compare(currentString) {
+				// String is written to the file
+				partnersFile << currentString;
+				break;
+			}
+
+		}	
+	}
+	
 }
 
 //TEST METHOD FOR TEST CLIENT
