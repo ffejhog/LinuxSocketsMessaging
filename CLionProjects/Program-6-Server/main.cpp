@@ -10,6 +10,7 @@
 using namespace std;
 
 void *connection_handler(void *); //Prototype for handler
+int counter = 0; //Stores number of connected clients.
 
 int main(int argc, char *argv[]) {
     int socketFileDescriptor;
@@ -81,12 +82,16 @@ int main(int argc, char *argv[]) {
 
 void *connection_handler(void *client_socket_desc){
     int ClientFileDescriptor = *(int*)client_socket_desc;
+    counter++;
+    cout << "Client " + to_string(counter) + " connected";
     ConnectionHandler clienthandler(ClientFileDescriptor);
     if(!clienthandler.checkIfAuthenticated()){
         clienthandler.closeConnection();
     }else{
         clienthandler.mainHandler();
         clienthandler.closeConnection();
+        counter--;
+        cout << "Client " + to_string(counter) + " disconnected";
     }
 
     return 0;

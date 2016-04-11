@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 
     if (argc < 3) {
         string ipAddress, portNumStr;
-        cout << "What is the Ip Address you wish to connect to?"<<endl;
+        cout << "What is the ip address or host name you wish to connect to?"<<endl;
         getline(cin,ipAddress);
         cout << "What is the port the server is listening on?"<<endl;
         getline(cin,portNumStr);
@@ -67,6 +67,9 @@ void mainClientHandler(){
         cout << "3. Exit" << endl;
 
         getline(cin, userinput);
+        if(userinput==""){
+            return;
+        }
         int userinputnum = stoi(userinput);
 
         switch (userinputnum) {
@@ -162,6 +165,9 @@ void  mainHandler(){
         cout << "3. Command 3" << endl;
         string userinput;
         getline(cin, userinput);
+        if(userinput==""){
+            return;
+        }
         int userinputnum = stoi(userinput);
 
         switch (userinputnum) {
@@ -175,10 +181,10 @@ void  mainHandler(){
                 break;
             case 3:
                 writeConnection("3");
-               // option3Handler();
+                option3Handler();
                 break;
-            case 8:
-                writeConnection("8");
+            case 7:
+                writeConnection("7");
                 return;
             default:
                 cout << "That is not a valid option" << endl << endl;
@@ -225,13 +231,13 @@ void option2Handler(){
     string status = readConnection();
     if (status == "1")
     {
-        cout << "Received...Sending BOB" << endl;
-        writeConnection("jeff");
+        cout << "Received...Sending testest" << endl;
+        writeConnection("testest");
     }
     else{
         cout << "ERROR!" <<endl;
 	}
-	
+
 	status = readConnection();
 	if (status == "1")
     {
@@ -242,29 +248,45 @@ void option2Handler(){
 	}
 }
 
-/*void option3Handler() {
+void option3Handler() {
     //PUT OPTION 3 STUFF HERE
-    string list = readConnection();
+    string recievedlist = readConnection();
+    string correctedList;
     string choice = "";
-   char *token = strtok(list.c_str(), ",");
-    while (token != ",")
-    {
-        cout << token << endl;
-    }
 
-    cout << "1 = Accept Request || 0 = Decline Request" << endl;
-    cin >> choice;
-    if (choice == "1")
+    for(int i=0; i<recievedlist.length();i++)
     {
-        cout << "Accepted" << endl;
-        writeConnection("Accepted");
-    }
-    else if (choice == "0")
+        if(recievedlist.at(i)==',')
+        {
+            correctedList+='\n';
+
+        }//end if
+        else if(recievedlist.at(i)=='|'){
+
+        } else {
+            correctedList+=recievedlist.at(i);
+        }//end else
+
+    }//end for
+    cout << correctedList;
+    cout << "Type the name of a request to accept or deny(If you wish to do nothing, enter 0)" << endl;
+    getline(cin, choice);
+    if (choice == "0")
     {
-        cout << "Declined " << endl;
-        writeConnection("Declined");
+        writeConnection("0");
     }
-}*/
+    else {
+        string acceptRejectChoice;
+        cout << "Do you wish to accept or deny " << choice <<"'s request? (a-Accept|r-Reject)" <<endl;
+        getline(cin, acceptRejectChoice);
+        writeConnection(choice+"|"+acceptRejectChoice);
+        if(acceptRejectChoice=="a"){
+            cout << choice <<" has been accepted"<<endl;
+        }else{
+            cout << choice <<" has been declined"<<endl;
+        }
+    }
+}//
 
 std::string readConnection(){
     ssize_t numOfCharRead;
