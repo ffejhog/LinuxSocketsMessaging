@@ -71,24 +71,50 @@ void ConnectionHandler::loginHandler(){
 
 }
 
-void ConnectionHandler::newUser(){
+void ConnectionHandler::newUser() {
     writeConnection("1"); // Letting client know Server is ready to recieve
 
-    string enteredUserName = readConnection();
+    string enteredUserNamePassword = readConnection();
 
     fstream userDatabase;
-    userDatabase.open(FILE_NAME_DIR+"users.bin", ios::out | ios::app);
+    userDatabase.open(FILE_NAME_DIR + "users.bin", ios::in | ios::out | ios::app);
 
 
-    if (userDatabase.is_open()){
-        userDatabase << enteredUserName << endl;
+    string enteredUserName;
+    for (int i = 0; i < enteredUserNamePassword.length(); i++) {
+        // once the '|' character is reached the for loop breaks
+        if (enteredUserNamePassword.at(i) == '|')
+            break;
+        // the current character is added to the String of usernames that will be written to the client
+        enteredUserName += enteredUserNamePassword.at(i);
     }
 
-    userDatabase.close();
-    writeConnection("1");//User is authenticated, let client know
+    string currentString, currentLine;
+    if (userDatabase.is_open() && userDatabase.good()) {
+        while (getline(userDatabase, currentLine)) {
 
+            // for loop checks each character for the '|' character which divides username from password in the file
+            for (int i = 0; i < currentLine.length(); i++) {
+                // once the '|' character is reached the for loop breaks
+                if (currentLine.at(i) == '|')
+                    break;
+                // the current character is added to the String of usernames that will be written to the client
+                currentString += currentLine.at(i);
+            }
+            // a comma added to sepereate usernames in the String
+            if (currentString == enteredUserName) {
+                writeConnection("0");
+                break;
+            } else {
+                userDatabase << enteredUserNamePassword << endl;
+                writeConnection("1");
+                break;
+            }
+        }
+        userDatabase.close();
+
+    }
 }
-
 
 
 
@@ -119,7 +145,7 @@ void ConnectionHandler::mainHandler() {
                 option5Handler();
             }else if(enteredCommandnum == 6){
                 option6Handler();
-		    }else if(enteredCommandnum == 7){
+		    }else if(enteredCommandnum == 8){
                 return;
             }
     }

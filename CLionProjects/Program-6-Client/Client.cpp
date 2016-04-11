@@ -8,8 +8,13 @@ int main(int argc, char *argv[])
 
 
     if (argc < 3) {
-        //Stuff for prompting ip
-
+        string ipAddress, portNumStr;
+        cout << "What is the Ip Address you wish to connect to?"<<endl;
+        getline(cin,ipAddress);
+        cout << "What is the port the server is listening on?"<<endl;
+        getline(cin,portNumStr);
+        portNumber = stoi(portNumStr);
+        server = gethostbyname(ipAddress.c_str());
     }else{
         portNumber = atoi(argv[2]);
         server = gethostbyname(argv[1]);
@@ -139,7 +144,7 @@ void newUser(){
             return;
         }else{
             //User not valid
-            cout << "ERROR: User not added" << endl;
+            cout << "ERROR: User already exists" << endl;
             return;
         }
     }else{
