@@ -55,7 +55,12 @@ int main(int argc, char *argv[])
     close(socketFileDescriptor);
     return 0;
 }
-
+/*	Proceedure: mainClientHandler()
+*	Author: Jeff
+*	Description: Handles the main login menu for the user, allows the user to login or create a new account
+*	Arguments:
+*		none
+*/
 
 void mainClientHandler(){
     string userinput;
@@ -66,12 +71,13 @@ void mainClientHandler(){
         cout << "2. Create New User" << endl;
         cout << "3. Exit" << endl;
 
-        getline(cin, userinput);
-        if(userinput==""){
+        getline(cin, userinput); //Get what command the user wants
+        if(userinput==""){ //Check if server premeturly disconnected
             return;
         }
         int userinputnum = stoi(userinput);
 
+        //Switch statement manges which function to class based on user input
         switch (userinputnum) {
             case 1:
                 userLogin();
@@ -80,18 +86,25 @@ void mainClientHandler(){
                 newUser();
                 break;
             case 3:
-                writeConnection("3");
+                writeConnection("3"); //Used to let the server know client is quiting
                 return;
             default:
                 cout << "That is not a valid option" << endl << endl;
         }
-        }while(!authenticated);
+        }while(!authenticated); //Loops while user is not authenenticated
 
-	mainHandler();
+	mainHandler(); //Calls mainhandler when client is logged in.
 
 
 
 }
+
+/*	Proceedure: userLogin()
+*	Author: Jeff
+*	Description: Handles the process of authenticating a user
+*	Arguments:
+*		none
+*/
 
 void userLogin(){
     string userName;
@@ -102,17 +115,17 @@ void userLogin(){
     if(serverResponse == "1"){
         //server is good to receive
         cout << "Username: ";
-        getline(cin, userName);
+        getline(cin, userName); //Ask for username
         cout << "Password: ";
-        getline(cin, password);
+        getline(cin, password);//Ask for password
 
-        writeConnection(userName + "|" + to_string(passHash(password.c_str(),HASH_SEED)));
-        serverResponse = readConnection();
-        if(serverResponse == "1"){
+        writeConnection(userName + "|" + to_string(passHash(password.c_str(),HASH_SEED))); //send the server the username|hased password combo
+        serverResponse = readConnection(); //read servers response
+        if(serverResponse == "1"){ //If "1" then login successful
             cout << "Success! Logging in User..." << endl;
-            authenticated = true;
+            authenticated = true; //Set client to authenticated
             return;
-        }else{
+        }else{ //Otherwise user does not exist
             //User not valid
             cout << "Username or Password incorrect, please try login again" << endl;
             return;
@@ -124,6 +137,13 @@ void userLogin(){
     }
 
 }
+
+/*	Proceedure: newUser()
+*	Author: Jeff
+*	Description: Handles the process of creating a new user
+*	Arguments:
+*		none
+*/
 
 void newUser(){
     string userName;
@@ -156,6 +176,13 @@ void newUser(){
         return;
     }
 }
+
+/*	Proceedure: mainHandler()
+*	Author: Jeff
+*	Description: Handles the main menu for an authenticated user.
+*	Arguments:
+*		none
+*/
 
 void  mainHandler(){
     while(1) {
@@ -203,6 +230,7 @@ void  mainHandler(){
  */
 void option1Handler(){
     //assume server is now waiting to send list of registered users
+    cout << endl << "Here is a list of all users: " << endl << endl;
     string str = readConnection();
     string newStr = "";
     for(int i=0; i<str.length();i++)
@@ -289,33 +317,75 @@ void option3Handler() {
     }
 }//
 
+
+
+/*	Proceedure: readConnection()
+*	Author: Jeff
+*	Description: Allows a string to be read form the server by using a character buffer, then converting the result to a string
+*	Arguments:
+*		none
+*/
+
+
+
 std::string readConnection(){
     ssize_t numOfCharRead;
     bzero(buffer,512); //Zero out the buffer
-    numOfCharRead = read(socketFileDescriptor,buffer,511);
-    if (numOfCharRead < 0){
+    numOfCharRead = read(socketFileDescriptor,buffer,511); //read data from the server using the file descriptor connection into the character buffer.
+    if (numOfCharRead < 0){//If no characters read something when wrong.
         cout << "ERROR reading from socket" << endl;
         return "";
     }
-    std::string returnString(buffer);
-    return returnString;
+    std::string returnString(buffer);//Convert the character array to a string
+    return returnString;//Return this string
 }
+
+
+/*	Proceedure: writeConnection(string)
+*	Author: Jeff
+*	Description: Allows a string to be written to the server by using a character buffer, then converting the result to a string
+*	Arguments:
+*		dataToWrite:
+*			Direction - input
+*			Type - string
+*			Description - THe string representing the characters to write to the server.
+*/
+
 
 int writeConnection(std::string dataToWrite){
     ssize_t numOfCharRead;
-    numOfCharRead = write(socketFileDescriptor,dataToWrite.c_str(),dataToWrite.length());
-    if (numOfCharRead < 0){
+    numOfCharRead = write(socketFileDescriptor,dataToWrite.c_str(),dataToWrite.length());//writes the string to the file discriptor representing the server.
+    if (numOfCharRead < 0){//if no characters written there was a problem.
         cout << "ERROR writing to socket" << endl;
         return -1;
     }
     return 0;
 }
 
-unsigned int passHash(const char* s, unsigned int seed) {
-    unsigned int hash = seed;
-    while (*s)
+/*	Proceedure: passHash()
+*	Author: Jeff
+*	Description: The method that hashes the password that is used to authenticate with the server.
+*	Arguments:
+*		input:
+ *		    Direction - input
+ *		    Type - Character array
+ *		    Description - A character array to hash
+*		seed:
+ *		    Direction - input
+ *		    Type - unsigned integer
+ *		    Description - The seed used to has the value, must be the same for each version of the client database on the server
+ *		returnValue:
+ *		    Direction - output
+ *		    Type - unsigned integer
+ *		    Description - The generated hash value for the given character array
+*/
+
+unsigned int passHash(const char* input, unsigned int seed) {
+    unsigned int hash = seed; //Set the hash value equal to the seed
+    while (*input) //Used to iterate though the characters in the character array.
     {
-        hash = hash * 101  +  *s++;
+        hash = hash * 101  +  *input++; //multiply the current has by a prime(101 in this case) then add the asscii value for the character in the nth place.
+                                        //This value is placed back it hash. Then the loop repeats until every character is hashed.
     }
     return hash;
 }
