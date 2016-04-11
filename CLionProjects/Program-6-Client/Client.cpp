@@ -157,15 +157,15 @@ void newUser(){
         getline(cin, userName);
         cout << "Password: ";
         getline(cin, password);
-        //Hash password here
-
-        writeConnection(userName + "|" + to_string(passHash(password.c_str(),HASH_SEED)));
-        serverResponse = readConnection();
-        if(serverResponse == "1"){
+        //Retrieve username and password
+		
+        writeConnection(userName + "|" + to_string(passHash(password.c_str(),HASH_SEED))); //Write the new username and the new (hashed) password
+        serverResponse = readConnection(); //Read server response
+        if(serverResponse == "1"){ //User is accepted(not already already used)
             cout << "Success! Please login with your new account..." << endl;
 
             return;
-        }else{
+        }else{//User declined(Already used)
             //User not valid
             cout << "ERROR: User already exists" << endl;
             return;
@@ -185,19 +185,20 @@ void newUser(){
 */
 
 void  mainHandler(){
-    while(1) {
+    while(1) { //Run Until user quits
+		//Main menu display
         cout << "Please Choose...  " << endl;
         cout << "1. List all users" << endl;
         cout << "2. Request a partnership with another user" << endl;
         cout << "3. View partner requests" << endl;
         cout << "7. Logout and Quit" << endl;
         string userinput;
-        getline(cin, userinput);
-        if(userinput==""){
+        getline(cin, userinput); //Get user choice
+        if(userinput==""){ //To prevent errors if server unexpectly diconnects
             return;
         }
         int userinputnum = stoi(userinput);
-
+		//Witch statement that calls the various functions for each of the client commands
         switch (userinputnum) {
             case 1:
                 writeConnection("1");
@@ -213,7 +214,7 @@ void  mainHandler(){
                 break;
             case 7:
                 writeConnection("7");
-                return;
+                return; //This command quits the program. 
             default:
                 cout << "That is not a valid option" << endl << endl;
         }
@@ -253,9 +254,10 @@ void option1Handler(){
 
 }//end option1Handler
 
-/* File Name: Client.cpp
- * Author Kevin Tran
+/* Proceedure: Client.cpp
+ * Author: Kevin Tran
  * Description: Client when ready will ask for name from server then send that name.
+ *	Arguments: NONE
  */
 
 void option2Handler(){
@@ -281,6 +283,12 @@ void option2Handler(){
         cout << "user does not Exist!" <<endl;
 	}
 }
+
+/* Proceedure: Client.cpp
+ * Author: Kevin Tran & Jeffrey Neer
+ * Description: Client when ready will ask for name from server then send that name.
+ *	Arguments: NONE
+ */
 
 void option3Handler() {
     //PUT OPTION 3 STUFF HERE
@@ -320,7 +328,7 @@ void option3Handler() {
             cout << choice <<" has been declined"<<endl;
         }
     }
-}//end option 3 handler
+}
 
 /*	Proceedure: void option4Handler()
  *	Author: Jeremy Polansky
