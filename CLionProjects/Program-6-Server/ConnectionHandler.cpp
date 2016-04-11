@@ -1,10 +1,30 @@
-//
-// Created by jeffrey on 3/25/16.
-//
-
+/*
+*	File Name: Player.cpp
+*	Author: Daniel Lecheler & Jeff Near
+*	Classes/Proceedures:
+*		ConnectionHandler(int) - constructor
+*		loginHandler() - 
+*		newUser() - 
+*		checkIfAuthenticated() - 
+*		mainHandler() - 
+*		option1Handler() - 
+*		option2Handler() - 
+*		option3Handler() - 
+*		option4Handler() - 
+*		option5Handler() - 
+*		option6Handler() - 
+*/
 #include "ConnectionHandler.h"
 
-
+/*	Proceedure: conncetionHandler()
+*	Author: Jeff
+*	Description: 
+*	Arguments:
+*		ConnectedClientFileDescriptor:
+*			Direction: Input
+*			Type: int
+*			Description: 
+*/
 ConnectionHandler::ConnectionHandler(int ConnectedClientFileDescriptor){
     ClientFileDescriptor = ConnectedClientFileDescriptor;
 
@@ -30,6 +50,12 @@ ConnectionHandler::ConnectionHandler(int ConnectedClientFileDescriptor){
 
 }
 
+/*	Proceedure: loginHandler()
+*	Author: Jeff
+*	Description: 
+*	Arguments:
+*		none
+*/
 void ConnectionHandler::loginHandler(){
     writeConnection("1"); // Letting client know Server is ready to recieve
 
@@ -75,6 +101,12 @@ void ConnectionHandler::loginHandler(){
 
 }
 
+/*	Proceedure: newUser()
+*	Author: Jeff
+*	Description: 
+*	Arguments:
+*		none
+*/
 void ConnectionHandler::newUser() {
     writeConnection("1"); // Letting client know Server is ready to recieve
 
@@ -120,12 +152,22 @@ void ConnectionHandler::newUser() {
     }
 }
 
-
-
+/*	Proceedure: checkIfAuthenticated()
+*	Author: Jeff
+*	Description: 
+*	Arguments:
+*		none
+*/
 bool ConnectionHandler::checkIfAuthenticated(){
     return authenticated;
 }
 
+/*	Proceedure: mainHandler()
+*	Author: Jeff
+*	Description: 
+*	Arguments:
+*		none
+*/
 void ConnectionHandler::mainHandler() {
         std::string enteredCommand;
         while (1){
@@ -162,6 +204,12 @@ void ConnectionHandler::mainHandler() {
 
 }
 
+/*	Proceedure: option1Handler()
+*	Author: Daniel
+*	Description: the mehtod communicates between the client and server to display the list of users
+*	Arguments:
+*		none
+*/
 void ConnectionHandler::option1Handler() {
 
     fstream usersFile;
@@ -193,6 +241,12 @@ void ConnectionHandler::option1Handler() {
 
 }
 
+/*	Proceedure: option2Handler()
+*	Author: Daniel
+*	Description: the mehtod communicates between the client and server to send a partner request from the current user, to another user
+*	Arguments:
+*		none
+*/
 void ConnectionHandler::option2Handler() {
 
 	// sends a 1 to the client to indicate the server is ready recieve a String
@@ -252,6 +306,12 @@ void ConnectionHandler::option2Handler() {
 
 }
 
+/*	Proceedure: option3Handler()
+*	Author: Daniel
+*	Description: the mehtod communicates between the client and server to display the list of a user's partner requests from other users, and then ask them to accept or reject a specific request
+*	Arguments:
+*		none
+*/
 void ConnectionHandler::option3Handler() {
 
 	// opens/loads the partnersRequests file, and the partners file
@@ -293,7 +353,24 @@ void ConnectionHandler::option3Handler() {
 
     } else {
 
+		// newPartner has the |a or |r removed
         newPartner = newPartner.substr(0, newPartner.length()-2);
+        // a temp String and temp file are created
+		String tempString = "";
+        fstream temp("temp.txt", ios::app | ios::out);
+        
+        // the for loop copies the values from the partner text file and adds them to the temp text file, excluding the current value of newPartner
+		for(int i = 0; i < currentString.length; i++) {
+			if(tempString.compare(newPartner)) {
+				i++;
+				tempString = "";
+			} 
+			else if(currentString.at(i) == ',' || currentString.at(i) == '|') {
+				temp << tempString;
+				tempString = "";
+			}
+			tempString += currentString.at(i);
+		}
 
         usersFile.clear();
         usersFile.seekg(0, ios::beg);
@@ -306,11 +383,25 @@ void ConnectionHandler::option3Handler() {
 				break;
 			}
 
-		}	
+		}
+	
+	// replaces the partner request file with the temp file, that's a copy of the original with the partner request that was accepted removed	
+	usersFile.clear();
+	usersFile.close();
+    temp.close();
+    remove(FILE_NAME_DIR + userName+ "_PartnerRequests.txt"); 
+    rename("temp.txt",FILE_NAME_DIR + userName+ "_PartnerRequests.txt");
+			
 	}
 	
 }
 
+/*	Proceedure: option4Handler()
+*	Author: Daniel
+*	Description: the mehtod communicates between the client and server to display the list of partners for a specific user
+*	Arguments:
+*		none
+*/
 void ConnectionHandler::option4Handler() {
 
 	fstream usersFile(FILE_NAME_DIR + userName+ "_Partners.txt", ios::in);
@@ -338,6 +429,12 @@ void ConnectionHandler::option4Handler() {
 
 }
 
+/*	Proceedure: option5Handler()
+*	Author: Daniel
+*	Description: the mehtod communicates between the client and server to send a message to a partner
+*	Arguments:
+*		none
+*/
 void ConnectionHandler::option5Handler() {
 		
 	// sends a 1 to the client to indicate the server is ready recieve a String
@@ -398,6 +495,12 @@ void ConnectionHandler::option5Handler() {
 	
 }
 
+/*	Proceedure: option6Handler()
+*	Author: Daniel
+*	Description: the mehtod communicates between the client and server to display the messages between a partner and a specific partner
+*	Arguments:
+*		none
+*/
 void ConnectionHandler::option6Handler() {
 	// reads the partner sent from the client to a String 
 	string selectedPartner = readConnection();
@@ -427,21 +530,47 @@ void ConnectionHandler::option6Handler() {
 
 //TEST METHOD FOR TEST CLIENT
 
+/*	Proceedure: Test1Method()
+*	Author: Jeff
+*	Description: 
+*	Arguments:
+*		none
+*/
 void ConnectionHandler::Test1Method(){
     std::cout << "Here is the message: " << readConnection() << std::endl;
     writeConnection("I got your message");
 }
 
+/*	Proceedure: error()
+*	Author: Jeff
+*	Description: 
+*	Arguments:
+*		none
+*/
 void ConnectionHandler::error(const char *msg){
     std::cout << &msg << std::endl;
 
 }
 
-
+/*	Proceedure: closeConnection(const char)
+*	Author: Jeff
+*	Description: 
+*	Arguments:
+*		msg:
+*			Direction - 
+*			Type - 
+*			Descrption - 
+*/
 void ConnectionHandler::closeConnection() {
     close(ClientFileDescriptor);
 }
 
+/*	Proceedure: readConnection()
+*	Author: Jeff
+*	Description: 
+*	Arguments:
+*		none
+*/
 std::string ConnectionHandler::readConnection(){
     bzero(buffer,256);
     numOfCharRead = read(ClientFileDescriptor,buffer,255);
@@ -453,6 +582,15 @@ std::string ConnectionHandler::readConnection(){
     return returnString;
 }
 
+/*	Proceedure: writeConnection(string)
+*	Author: Jeff
+*	Description: 
+*	Arguments:
+*		dataToWrite:
+*			Direction - input
+*			Type - string
+*			Description - 
+*/
 int ConnectionHandler::writeConnection(std::string dataToWrite){
     numOfCharRead = write(ClientFileDescriptor,dataToWrite.c_str(),dataToWrite.length());
     if (numOfCharRead < 0){
