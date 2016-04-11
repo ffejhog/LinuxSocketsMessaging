@@ -320,9 +320,113 @@ void option3Handler() {
             cout << choice <<" has been declined"<<endl;
         }
     }
-}//
+}//end option 3 handler
 
+/*	Proceedure: void option4Handler()
+ *	Author: Jeremy Polansky
+ *	Description: Reads string info from server till a | deliminator, then formats and outputs to screen
+ *	Arguments: NONE
+ */
+void option4Handler(){
+    //assume server is now waiting to send list of user's partners
+    cout << endl << "Here is a list of all your partners: " << endl << endl;
+    string str = readConnection();
+    string newStr = "";
+    for(int i=0; i<str.length();i++)
+    {
+        if(str.at(i)==',' || str.at(i)=='|')
+        {
+            newStr+='\n';
+            
+        }//end if
+        else
+        {
+            newStr+=str.at(i);
+        }//end else
+        
+    }//end for
+    
+    cout << newStr;
+    
+}//end option4Handler()
 
+/*	Proceedure: void option5Handler()
+ *	Author: Jeremy Polansky
+ *	Description: sends a message to a partner and communicates with server to make sure it's sent
+ *	Arguments: NONE?
+ */
+void option5Handler(){
+    int option=readConnection();//assume this will be an integer value of one
+    if(option!=1)
+    {
+        cout<<"Communication Error: Please restart everything and try again."<<endl;
+    }//if not correct communication
+    else if(option==1)
+    {
+        string mes="The message was correctly sent";//default message to send;I'm not sure if the user inputs here
+        int point=0;
+        int count;
+        string newMes="";
+        while(point<=mes.length())//loop in case mes is longer than 255 characters
+        {
+            count=0;
+            while((point<=mes.length())&&(count<255))//sent strings will have free space in case | needs adding
+            {
+                
+                newMes+=mes.at(point);//copy over char
+                
+                if(point=mes.length())//if just added last char, put deliminator at end
+                    newMes+="|";
+                
+                point++;//update values
+                count++;
+                
+            }//another while loop
+            writeConnection(newMes);
+            newMes="";//clear in order to send more using same newMes string pointer
+                //assume that this will not loop again if a | was added in nested while loop
+        }//first while loop
+        mes=readConnection();//just reusing old string pointer
+        if(mes==1)
+        {
+            cout<<"Message Sent to Server."<<endl;
+            mes=readConnection();
+            if(mes==1)
+            {
+                cout<<"Message Sent to Recipient"<<endl;
+            }//nestted if
+            else
+                cout<<"ERROR: Server could not Send the Message to the Recipient, Please try again later."<<endl;
+        }
+        else
+            cout<<"Server was not able not able to revice the message, but somehow was able to let us know"<<endl;
+    }//if correct communication
+}//end option5Handler()
+
+/*	Proceedure: void option6Handler()
+ *	Author: Jeremy Polansky
+ *	Description: Displays a message sent from a partner
+ *	Arguments: NONE
+ */
+void option6Handler(){
+    //assume server is now waiting to send list of user's partners
+    cout << endl << "You have a message from an unknown partner!: " << endl << endl;
+    string str = readConnection();
+    string newStr = "";
+    for(int i=0; i<str.length();i++)
+    {
+        if(str.at(i)==',' || str.at(i)=='|')
+        {
+            newStr+='\n';
+            
+        }//end if
+        else
+        {
+            newStr+=str.at(i);
+        }//end else
+    }//end for
+    cout << newStr;
+}//end option6Handler()
 
 /*	Proceedure: readConnection()
 *	Author: Jeff
