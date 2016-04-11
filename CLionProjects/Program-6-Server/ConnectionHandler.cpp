@@ -313,6 +313,68 @@ void ConnectionHandler::option4Handler() {
 
 }
 
+void ConnectionHandler::option5Handler() {
+		
+	// sends a 1 to the client to indicate the server is ready recieve a String
+	writeConnection("1");
+
+	// stores the String from the client to newPartner
+	string newPartner = readConnection();
+
+	// opens/loads the users.txt file
+	fstream usersFile(FILE_NAME_DIR + userName+ "_Partners.txt", ios::in);
+	// creates Strings representing the currentLine and each user from the database file
+	string currentLine, currentString;
+	// bool represents if there's a match in the user.txt file
+	bool userExists = false;
+
+	// for loop checks each character for the '|' character which divides username from password in the file
+	while(getline(usersFile, currentLine) )	{
+
+		// creates an empty String for each line
+		currentString = "";
+
+		// for loop checks each character for the '|' character which divides username from password in the file
+		for(int i = 0; i < currentLine.length(); i++)
+		{
+			// the current character is added to the String for each a username
+			currentString += currentLine.at(i);
+		}
+
+		// conditional compares the current username to the partner from the client
+		if(newPartner.compare(currentString) {
+			// bool assigned the value of true, and then breaks the while loop
+			userExists = true;
+			break;
+		}
+
+	}
+
+	// conditional checks the value of the bool userExists and adds the partner from the client if its true
+	if(userExists) {
+		// 1 is sent to the client to indicate that the server handled the String correctly
+		writeConnection("1");
+		
+		// stores the String from the client to newMessage
+		String newMessage = readConnection();
+		
+		// opens or creates the file that is represents the current user's and partner's messages
+		fstream messagesFile(FILE_NAME_DIR + userName+ "_to_" + newPartner + "_Messages.txt", ios::app | ios::out);
+
+		// the String newMessage is inserted into the text file
+        messagesFile << newMessage;
+        
+        writeConnection("1");
+	}
+	else {
+		// 0 is sent to the client to indicate that the user sent as a partner doesn't exist
+		writeConnection("0");
+	}	
+	
+}
+
+
+
 //TEST METHOD FOR TEST CLIENT
 
 void ConnectionHandler::Test1Method(){
