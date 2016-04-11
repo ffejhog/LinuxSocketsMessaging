@@ -112,13 +112,19 @@ void ConnectionHandler::mainHandler() {
             }else if(enteredCommandnum == 2){
 			    option2Handler();
             }else if(enteredCommandnum == 3){
-			    //option3Handler();
-		    }else if(enteredCommandnum == 8){
+                option3Handler();
+            }else if(enteredCommandnum == 4){
+                option4Handler();
+            }else if(enteredCommandnum == 5){
+                option5Handler();
+            }else if(enteredCommandnum == 6){
+                option6Handler();
+		    }else if(enteredCommandnum == 7){
                 return;
             }
     }
 
-    bool terminateConnection = false;
+
 
 
 }
@@ -128,7 +134,7 @@ void ConnectionHandler::option1Handler() {
     fstream usersFile;
     usersFile.open(FILE_NAME_DIR+"users.bin", ios::in);
     string currentLine, currentString;
-    usersFile.clear();
+
     // while loop loads each line of the file to currentLine one line at a time
     if(usersFile.is_open() && usersFile.good()) {
         while ( getline (usersFile,currentLine) ) {
@@ -186,7 +192,7 @@ void ConnectionHandler::option2Handler() {
 		}
 
 		// conditional compares the current username to the partner from the client
-		if(newPartner.compare(currentString) {
+		if(newPartner == currentString) {
 			// bool assigned the value of true, and then breaks the while loop
 			userExists = true;
 			break;
@@ -246,11 +252,11 @@ void ConnectionHandler::option3Handler() {
 	writeConnection(currentString);
 	
 	// String is read from the client, and bool is used to determine if the user accepted or rejected
-	String newPartner = readConnection();
+	string newPartner = readConnection();
 	bool accepted = newPartner.at(newPartner.size() - 1) == 'a';
 				
 	// conditional does nothing if 0 is returned, or the value of accepted is false
-	if(newPartner.compare("0") || !accepted) { }	
+	if(newPartner=="0" || !accepted) { }
 	else {
 		// for loop removes the | and a or r from the end of the returned String
 		for(int i = 0; i < currentLine.length(); i++)
@@ -258,7 +264,7 @@ void ConnectionHandler::option3Handler() {
 				newPartner = newPartner.substr(0, i);
 		
 		// for loop checks each character for the '|' character which divides username from password in the file
-		while(getline(usersFile, String currentLine) )	{
+		while(getline(usersFile, currentLine) )	{
 
 			// creates an empty String for each line
 			currentString = "";
@@ -274,7 +280,7 @@ void ConnectionHandler::option3Handler() {
 				}
 
 			// conditional compares the current username to the partner from the client client
-			if(newPartner.compare(currentString) {
+			if(newPartner==currentString) {
 				// String is written to the file
 				partnersFile << currentString;
 				break;
@@ -287,10 +293,9 @@ void ConnectionHandler::option3Handler() {
 
 void ConnectionHandler::option4Handler() {
 
-    fstream usersFile;
 	fstream usersFile(FILE_NAME_DIR + userName+ "_Partners.txt", ios::in);
-    String currentLine, currentString;
-    usersFile.clear();
+    string currentLine, currentString;
+
     // while loop loads each line of the file to currentLine one line at a time
     if(usersFile.is_open() && usersFile.good()) {
         while ( getline (usersFile,currentLine) ) {
@@ -342,7 +347,7 @@ void ConnectionHandler::option5Handler() {
 		}
 
 		// conditional compares the current username to the partner from the client
-		if(newPartner.compare(currentString) {
+		if(newPartner==currentString) {
 			// bool assigned the value of true, and then breaks the while loop
 			userExists = true;
 			break;
@@ -356,7 +361,7 @@ void ConnectionHandler::option5Handler() {
 		writeConnection("1");
 		
 		// stores the String from the client to newMessage
-		String newMessage = readConnection();
+		string newMessage = readConnection();
 		
 		// opens or creates the file that is represents the current user's and partner's messages
 		fstream messagesFile(FILE_NAME_DIR + userName+ "_to_" + newPartner + "_Messages.txt", ios::app | ios::out);
@@ -375,12 +380,11 @@ void ConnectionHandler::option5Handler() {
 
 void ConnectionHandler::option6Handler() {
 	// reads the partner sent from the client to a String 
-	String selectedPartner = readConnection();
+	string selectedPartner = readConnection();
 
-    fstream usersFile;
-	fstream usersFile(FILE_NAME_DIR + userName + "_to_" + newPartner + "_Messages.txt", ios::in);
-    String currentLine, currentString;
-    usersFile.clear();
+	fstream usersFile(FILE_NAME_DIR + userName + "_to_" + selectedPartner + "_Messages.txt", ios::in);
+    string currentLine, currentString;
+
     // while loop loads each line of the file to currentLine one line at a time
     if(usersFile.is_open() && usersFile.good()) {
         while ( getline (usersFile,currentLine) ) {
