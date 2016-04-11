@@ -225,21 +225,26 @@ void option1Handler(){
 
 }//end option1Handler
 
-
+/* File Name: Client.cpp
+ * Author Kevin Tran
+ * Description: Client when ready will ask for name from server then send that name.
+ */
 
 void option2Handler(){
 //PUT OPTION 2 STUFF HERE
-    string status = readConnection();
-    if (status == "1")
+    string status = readConnection();   //Read server connection
+    string name;
+    if (status == "1")  //If server send back 1, ready to receive name
     {
-        cout << "Received...Sending testest" << endl;
-        writeConnection("jeff2");
+        cout << "Ready to receive name: " << endl;
+        cin >> name;
+        writeConnection(name);  //Send name back to server
     }
     else{
         cout << "ERROR!" <<endl;
 	}
 
-	status = readConnection();
+	status = readConnection();  //Server send back 1, shows confirmation
 	if (status == "1")
     {
         cout << "You are now partnered with <USER" <<endl;
