@@ -5,12 +5,12 @@ CC=g++ #set compiler to be used
 all: Server Client
 
 
-Client:
-	$(CC) $(CFLAGS) -o CLionProjects/Program-6-Client/Program6-Client.out CLionProjects/Program-6-Client/Client.cpp CLionProjects/Program-6-Client/Client.h  #Generates packaged binary file
+client:
+	$(CC) $(CFLAGS) -o Program6-Client.out CLionProjects/Program-6-Client/Client.cpp CLionProjects/Program-6-Client/Client.h  #Generates packaged binary file
 
-Server: main.o ConnectionHandler.o
-	$(CC) $(CFLAGS)  -pthread -o CLionProjects/Program-6-Server/Program6-Server.out CLionProjects/Program-6-Server/main.o CLionProjects/Program-6-Server/ConnectionHandler.o  #Generates packaged binary file
-
+server: main.o ConnectionHandler.o
+	$(CC) $(CFLAGS)  -pthread -o Program6-Server.out CLionProjects/Program-6-Server/main.o CLionProjects/Program-6-Server/ConnectionHandler.o  #Generates packaged binary file
+	if [ -d "data" ]; then echo "Dir exists"; else mkdir data; fi
 main.o: CLionProjects/Program-6-Server/main.cpp CLionProjects/Program-6-Server/ConnectionHandler.h #Constucts main.o object
 	$(CC) $(CFLAGS)  -pthread -c CLionProjects/Program-6-Server/main.cpp -o CLionProjects/Program-6-Server/main.o
 
@@ -18,8 +18,8 @@ ConnectionHandler.o: CLionProjects/Program-6-Server/ConnectionHandler.cpp CLionP
 	$(CC) $(CFLAGS)  -pthread -c CLionProjects/Program-6-Server/ConnectionHandler.cpp -o CLionProjects/Program-6-Server/ConnectionHandler.o
 
 clean: #removes all compiled object files
-	-rm -r *.o
+	-rm CLionProjects/Program-6-Server/*.o
 
 cleanall: #Removes all but source files
-	-rm -r *.out
-	-rm -r *.o
+	-rm *.out
+	-rm CLionProjects/Program-6-Server/*.o
