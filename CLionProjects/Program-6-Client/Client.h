@@ -31,7 +31,7 @@ void option3Handler();
 void mainHandler();
 
 int socketFileDescriptor; //File discription for socket used to make connection
-char buffer[256]; //Buffer to store data for receive
+char buffer[512]; //Buffer to store data for receive
 bool authenticated = false;
 
 #endif //PROGRAM_6_CLIENT_CLIENT_H

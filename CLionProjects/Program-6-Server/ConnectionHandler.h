@@ -34,7 +34,7 @@ class ConnectionHandler {
     private:
         int ClientFileDescriptor;
         ssize_t numOfCharRead;
-        char buffer[256];
+        char buffer[512];
         bool authenticated;
         std::string userName;
         std::string readConnection();

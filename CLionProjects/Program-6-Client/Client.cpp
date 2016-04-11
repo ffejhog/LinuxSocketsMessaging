@@ -160,9 +160,10 @@ void newUser(){
 void  mainHandler(){
     while(1) {
         cout << "Please Choose...  " << endl;
-        cout << "1. Command 1" << endl;
-        cout << "2. Command 2" << endl;
-        cout << "3. Command 3" << endl;
+        cout << "1. List all users" << endl;
+        cout << "2. Request a partnership with another user" << endl;
+        cout << "3. View partner requests" << endl;
+        cout << "7. Logout and Quit" << endl;
         string userinput;
         getline(cin, userinput);
         if(userinput==""){
@@ -290,8 +291,8 @@ void option3Handler() {
 
 std::string readConnection(){
     ssize_t numOfCharRead;
-    bzero(buffer,256); //Zero out the buffer
-    numOfCharRead = read(socketFileDescriptor,buffer,255);
+    bzero(buffer,512); //Zero out the buffer
+    numOfCharRead = read(socketFileDescriptor,buffer,511);
     if (numOfCharRead < 0){
         cout << "ERROR reading from socket" << endl;
         return "";

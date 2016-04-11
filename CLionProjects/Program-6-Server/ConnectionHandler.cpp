@@ -53,24 +53,24 @@ ConnectionHandler::ConnectionHandler(int ConnectedClientFileDescriptor){
 
 /*	Proceedure: loginHandler()
 *	Author: Jeff
-*	Description: 
+*	Description: This class handles the login process by comparing the username and password combination sent from the client against the users.bin file
 *	Arguments:
 *		none
 */
 void ConnectionHandler::loginHandler(){
     writeConnection("1"); // Letting client know Server is ready to recieve
 
-    string enteredUserName = readConnection();
+    string enteredUserName = readConnection(); //Read username password combination
 
     fstream userDatabase;
-    userDatabase.open(FILE_NAME_DIR+"users.bin", ios::in);
+    userDatabase.open(FILE_NAME_DIR+"users.bin", ios::in); //Open users.bin file
     string readLine;
 
 
     if (userDatabase.is_open()){
-        while ( getline (userDatabase,readLine) )
+        while ( getline (userDatabase,readLine) ) //Read each file of file
         {
-            if(readLine == enteredUserName) {
+            if(readLine == enteredUserName) { //If user|pass combo found, authenticate
                 authenticated = true;
 
                 for(int i = 0; i < enteredUserName.length(); i++)
@@ -79,7 +79,7 @@ void ConnectionHandler::loginHandler(){
                     if(enteredUserName.at(i) == '|')
                         break;
                     // the current character is added to the String for each a username
-                    userName += enteredUserName.at(i);
+                    userName += enteredUserName.at(i); //Retreieve just the username for the class.
                 }
 
                 break;
@@ -94,9 +94,9 @@ void ConnectionHandler::loginHandler(){
     if(authenticated){
         writeConnection("1");//User is authenticated, let client know
     }else{
-        writeConnection("0");//User is authenticated, let client know
+        writeConnection("0");//User is not authenticated, let client know
     }
-    //Check if valid stuff here
+
 
 
 
@@ -104,20 +104,21 @@ void ConnectionHandler::loginHandler(){
 
 /*	Proceedure: newUser()
 *	Author: Jeff
-*	Description: 
+*	Description: Allows the client to create a new user
 *	Arguments:
 *		none
 */
 void ConnectionHandler::newUser() {
     writeConnection("1"); // Letting client know Server is ready to recieve
 
-    string enteredUserNamePassword = readConnection();
+    string enteredUserNamePassword = readConnection(); //Read new user info
 
     fstream userDatabase;
     userDatabase.open(FILE_NAME_DIR + "users.bin", ios::in | ios::out | ios::app);
 
 
     string enteredUserName;
+    //This for loop just retrieves the username part of the user|pass pair
     for (int i = 0; i < enteredUserNamePassword.length(); i++) {
         // once the '|' character is reached the for loop breaks
         if (enteredUserNamePassword.at(i) == '|')
@@ -126,36 +127,37 @@ void ConnectionHandler::newUser() {
         enteredUserName += enteredUserNamePassword.at(i);
     }
 
+
     string currentString, currentLine;
     if (userDatabase.is_open() && userDatabase.good()) {
-        while (getline(userDatabase, currentLine)) {
+        while (getline(userDatabase, currentLine)) { //Read each line of the users.bin file
 
             // for loop checks each character for the '|' character which divides username from password in the file
             for (int i = 0; i < currentLine.length(); i++) {
                 // once the '|' character is reached the for loop breaks
                 if (currentLine.at(i) == '|')
                     break;
-                // the current character is added to the String of usernames that will be written to the client
+                // the current character is added to the String of that represents the single username
                 currentString += currentLine.at(i);
             }
-            // a comma added to sepereate usernames in the String
-            if (currentString == enteredUserName) {
-                writeConnection("0");
+            //
+            if (currentString == enteredUserName) { //CHeck to see if username already exists in the users.bin file
+                writeConnection("0"); //Tell the client username already eexists
                 break;
             } else {
-                userDatabase << enteredUserNamePassword << endl;
-                writeConnection("1");
+                userDatabase << enteredUserNamePassword << endl; //Add user to the users.bin file.
+                writeConnection("1"); //Tell client user added successfully.
                 break;
             }
         }
-        userDatabase.close();
+        userDatabase.close(); //CLose users.bin
 
     }
 }
 
 /*	Proceedure: checkIfAuthenticated()
 *	Author: Jeff
-*	Description: 
+*	Description: SImply returns whether or not the user is authenticated
 *	Arguments:
 *		none
 */
@@ -165,38 +167,45 @@ bool ConnectionHandler::checkIfAuthenticated(){
 
 /*	Proceedure: mainHandler()
 *	Author: Jeff
-*	Description: 
+*	Description: Handles the main menu for an authenticated user.
 *	Arguments:
 *		none
 */
 void ConnectionHandler::mainHandler() {
         std::string enteredCommand;
-        while (1){
+        while (1){ //Loop forever unless user says to quit
             enteredCommand = "0";
-            enteredCommand = readConnection();
-            if(enteredCommand==""){
+            enteredCommand = readConnection(); //Read what command the user wishes to do
+            if(enteredCommand==""){ //Check if client disconnected unexpectedly
                 return;
             }
             int enteredCommandnum = std::stoi(enteredCommand);
 
-            if(enteredCommandnum == 0){ //Check for success
-                std::cout << "ERROR on client read" <<std::endl;
-                closeConnection();
-	            break;
-            }else if(enteredCommandnum == 1){
-			    option1Handler();
-            }else if(enteredCommandnum == 2){
-			    option2Handler();
-            }else if(enteredCommandnum == 3){
-                option3Handler();
-            }else if(enteredCommandnum == 4){
-                option4Handler();
-            }else if(enteredCommandnum == 5){
-                option5Handler();
-            }else if(enteredCommandnum == 6){
-                option6Handler();
-		    }else if(enteredCommandnum == 7){
-                return;
+            switch(enteredCommandnum){ //Check for success
+                case 0:
+                    cout << "ERROR on client read" <<endl;
+                    closeConnection();
+	                break;
+            //All of these below simply check which method to call based on the input
+                case 1:
+			        option1Handler();
+                    break;
+                case 2:
+			        option2Handler();
+                    break;
+                case 3:
+                    option3Handler();
+                    break;
+                case 4:
+                    option4Handler();
+                    break;
+                case 5:
+                    option5Handler();
+                    break;
+                case 6:
+                    option6Handler();
+                default:
+                    return;
             }
     }
 
@@ -565,38 +574,11 @@ void ConnectionHandler::option6Handler() {
 
 }
 
-//TEST METHOD FOR TEST CLIENT
-
-/*	Proceedure: Test1Method()
-*	Author: Jeff
-*	Description: 
-*	Arguments:
-*		none
-*/
-void ConnectionHandler::Test1Method(){
-    std::cout << "Here is the message: " << readConnection() << std::endl;
-    writeConnection("I got your message");
-}
-
-/*	Proceedure: error()
-*	Author: Jeff
-*	Description: 
-*	Arguments:
-*		none
-*/
-void ConnectionHandler::error(const char *msg){
-    std::cout << &msg << std::endl;
-
-}
 
 /*	Proceedure: closeConnection(const char)
 *	Author: Jeff
 *	Description: 
-*	Arguments:
-*		msg:
-*			Direction - 
-*			Type - 
-*			Descrption - 
+*	Arguments: CLoses the file discriptor for the client, terminating the connection
 */
 void ConnectionHandler::closeConnection() {
     close(ClientFileDescriptor);
@@ -604,34 +586,34 @@ void ConnectionHandler::closeConnection() {
 
 /*	Proceedure: readConnection()
 *	Author: Jeff
-*	Description: 
+*	Description: Allows a string to be read form the client by using a character buffer, then converting the result to a string
 *	Arguments:
 *		none
 */
 std::string ConnectionHandler::readConnection(){
-    bzero(buffer,256);
-    numOfCharRead = read(ClientFileDescriptor,buffer,255);
-    if (numOfCharRead < 0){
-        error("ERROR reading from socket");
+    bzero(buffer,512); //zero out the buffer
+    numOfCharRead = read(ClientFileDescriptor,buffer,511); //read data from the client using the file discriptor connection into the characer buffer.
+    if (numOfCharRead < 0){ //If no characers read somthing when wrong.
+        cout << "ERROR reading from socket" << endl;
         return "";
     }
-    std::string returnString(buffer);
-    return returnString;
+    std::string returnString(buffer); //Convert the character array to a string
+    return returnString; //Return this string
 }
 
 /*	Proceedure: writeConnection(string)
 *	Author: Jeff
-*	Description: 
+*	Description: Allows a string to be written to the client by using a character buffer, then converting the result to a string
 *	Arguments:
 *		dataToWrite:
 *			Direction - input
 *			Type - string
-*			Description - 
+*			Description - THe string representing the characters to write to the client.
 */
 int ConnectionHandler::writeConnection(std::string dataToWrite){
-    numOfCharRead = write(ClientFileDescriptor,dataToWrite.c_str(),dataToWrite.length());
-    if (numOfCharRead < 0){
-        error("ERROR writing to socket");
+    numOfCharRead = write(ClientFileDescriptor,dataToWrite.c_str(),dataToWrite.length()); //writes the string to the file discriptor representing the client.
+    if (numOfCharRead < 0){ //if no characters written there was a problem.
+        cout << "ERROR writting to socket" << endl;
         return -1;
     }
     return 0;
