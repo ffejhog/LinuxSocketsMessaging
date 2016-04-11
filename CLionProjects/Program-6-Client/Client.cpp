@@ -232,7 +232,7 @@ void option2Handler(){
     if (status == "1")
     {
         cout << "Received...Sending testest" << endl;
-        writeConnection("testest");
+        writeConnection("jeff2");
     }
     else{
         cout << "ERROR!" <<endl;

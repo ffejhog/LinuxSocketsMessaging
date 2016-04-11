@@ -18,25 +18,26 @@
 
 /*	Proceedure: conncetionHandler()
 *	Author: Jeff
-*	Description: 
+*	Description: This is the default constructor for each connected user. It works with the client to authenticate the user. Once the user is authenticated,
+*	             this class is used to handle all of the communication between client and server
 *	Arguments:
 *		ConnectedClientFileDescriptor:
 *			Direction: Input
 *			Type: int
-*			Description: 
+*			Description: This is the file Discriptor of the socket connection between the client and the server
 */
 ConnectionHandler::ConnectionHandler(int ConnectedClientFileDescriptor){
-    ClientFileDescriptor = ConnectedClientFileDescriptor;
+    ClientFileDescriptor = ConnectedClientFileDescriptor; //Store the socket connection descriptor for this client into the class for easy access.
 
 
     do {
-        std::string enteredCommand = readConnection();
-        if(enteredCommand==""){
+        std::string enteredCommand = readConnection(); //Wait for client to send command
+        if(enteredCommand==""){ //To protect against client disconnection unexpectedly
             return;
         }
         int enteredCommandnum = stoi(enteredCommand);
 
-        switch (enteredCommandnum) {
+        switch (enteredCommandnum) { //THis switch statement takes the entered command and goes to the approprate method to handle.
             case 1:
                 loginHandler();
                 break;
@@ -46,7 +47,7 @@ ConnectionHandler::ConnectionHandler(int ConnectedClientFileDescriptor){
             default:
                 return;
         }
-    }while(!authenticated);
+    }while(!authenticated); //Loop while the user is not logged in.
 
 }
 
@@ -290,10 +291,10 @@ void ConnectionHandler::option2Handler() {
 	// conditional checks the value of the bool userExists and adds the partner from the client if its true
 	if(userExists) {
 		// opens or creates the file that is represents the current user's partners
-		fstream partnersFile(FILE_NAME_DIR + userName+ "_PartnerRequests.txt", ios::app | ios::out);
+		fstream partnersFile(FILE_NAME_DIR + newPartner + "_PartnerRequests.txt", ios::app | ios::out);
 
 		// the String newPartner is inserted into the text file
-        partnersFile << newPartner;
+        partnersFile << userName;
 
 		// 1 is sent to the client to indicate that the server handled the String correctly
 		writeConnection("1");
@@ -315,8 +316,8 @@ void ConnectionHandler::option2Handler() {
 void ConnectionHandler::option3Handler() {
 
 	// opens/loads the partnersRequests file, and the partners file
-	fstream usersFile(FILE_NAME_DIR + userName+ "_PartnerRequests.txt", ios::in);
-	fstream partnersFile(FILE_NAME_DIR + userName+ "_Partners.txt", ios::app | ios::out);
+	fstream usersFile(FILE_NAME_DIR + userName + "_PartnerRequests.txt", ios::in);
+	fstream partnersFile(FILE_NAME_DIR + userName + "_Partners.txt", ios::app | ios::out);
 
 	// creates Strings representing the currentLine and each user from the database file
 	string currentLine, currentString ="";
@@ -356,11 +357,11 @@ void ConnectionHandler::option3Handler() {
 		// newPartner has the |a or |r removed
         newPartner = newPartner.substr(0, newPartner.length()-2);
         // a temp String and temp file are created
-		String tempString = "";
-        fstream temp("temp.txt", ios::app | ios::out);
+		string tempString = "";
+        fstream temp(FILE_NAME_DIR + userName + "temp.txt", ios::app | ios::out);
 	
 		// the for loop copies the values from the partner text file and adds them to the temp text file, excluding the current value of newPartner
-		for(int i = 0; i < currentString.length; i++) {
+		for(int i = 0; i < currentString.length(); i++) {
 			if(tempString.compare(newPartner)) {
 				i++;
 				tempString = "";
@@ -373,11 +374,13 @@ void ConnectionHandler::option3Handler() {
 		}
 		
 		// replaces the partner request file with the temp file, that's a copy of the original with the partner request that was accepted removed	
-		usersFile.clear();
+
 		usersFile.close();
     	temp.close();
-    	remove(FILE_NAME_DIR + userName+ "_PartnerRequests.txt"); 
-    	rename("temp.txt",FILE_NAME_DIR + userName+ "_PartnerRequests.txt");
+        string fileName1 = FILE_NAME_DIR + userName+ "_PartnerRequests.txt";
+        string filename2 = FILE_NAME_DIR + userName + "temp.txt";
+        remove(fileName1.c_str());
+    	rename(filename2.c_str(),fileName1.c_str());
 		
 	}
 	else {
@@ -385,11 +388,12 @@ void ConnectionHandler::option3Handler() {
 		// newPartner has the |a or |r removed
         newPartner = newPartner.substr(0, newPartner.length()-2);
         // a temp String and temp file are created
-		String tempString = "";
-        fstream temp("temp.txt", ios::app | ios::out);
-        
+		string tempString = "";
+        fstream temp(FILE_NAME_DIR + userName + "temp.txt", ios::app | ios::out);
+        fstream newPartnerPartners(FILE_NAME_DIR + newPartner + "_Partners.txt", ios::app | ios::out);
+
         // the for loop copies the values from the partner text file and adds them to the temp text file, excluding the current value of newPartner
-		for(int i = 0; i < currentString.length; i++) {
+		for(int i = 0; i < currentString.length(); i++) {
 			if(tempString.compare(newPartner)) {
 				i++;
 				tempString = "";
@@ -409,6 +413,7 @@ void ConnectionHandler::option3Handler() {
 			if(newPartner==currentString) {
 				// String is written to the file
 				partnersFile << currentString;
+                newPartnerPartners << currentString;
 				break;
 			}
 
@@ -418,8 +423,11 @@ void ConnectionHandler::option3Handler() {
 	usersFile.clear();
 	usersFile.close();
     temp.close();
-    remove(FILE_NAME_DIR + userName+ "_PartnerRequests.txt"); 
-    rename("temp.txt",FILE_NAME_DIR + userName+ "_PartnerRequests.txt");
+    string fileName = FILE_NAME_DIR + userName+ "_PartnerRequests.txt";
+    string fileName2 = FILE_NAME_DIR + userName+ "temp.txt";
+    remove(fileName.c_str());
+    rename(fileName2.c_str(),fileName.c_str());
+
 			
 	}
 	
