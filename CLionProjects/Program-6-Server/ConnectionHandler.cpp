@@ -349,9 +349,38 @@ void ConnectionHandler::option3Handler() {
 	bool accepted = newPartner.at(newPartner.size() - 1) == 'a';
 
 	// conditional does nothing if 0 is returned, or the value of accepted is false
-	if(newPartner=="0" || !accepted) {
-
-    } else {
+	if(newPartner=="0") {
+    } 
+	else if(!accepted)
+	{
+		// newPartner has the |a or |r removed
+        newPartner = newPartner.substr(0, newPartner.length()-2);
+        // a temp String and temp file are created
+		String tempString = "";
+        fstream temp("temp.txt", ios::app | ios::out);
+	
+		// the for loop copies the values from the partner text file and adds them to the temp text file, excluding the current value of newPartner
+		for(int i = 0; i < currentString.length; i++) {
+			if(tempString.compare(newPartner)) {
+				i++;
+				tempString = "";
+			} 
+			else if(currentString.at(i) == ',' || currentString.at(i) == '|') {
+				temp << tempString;
+				tempString = "";
+			}
+			tempString += currentString.at(i);
+		}
+		
+		// replaces the partner request file with the temp file, that's a copy of the original with the partner request that was accepted removed	
+		usersFile.clear();
+		usersFile.close();
+    	temp.close();
+    	remove(FILE_NAME_DIR + userName+ "_PartnerRequests.txt"); 
+    	rename("temp.txt",FILE_NAME_DIR + userName+ "_PartnerRequests.txt");
+		
+	}
+	else {
 
 		// newPartner has the |a or |r removed
         newPartner = newPartner.substr(0, newPartner.length()-2);
