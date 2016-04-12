@@ -28,6 +28,9 @@ void newUser();
 void option1Handler();
 void option2Handler();
 void option3Handler();
+void option4Handler();
+void option5Handler();
+void option6Handler();
 void mainHandler();
 
 int socketFileDescriptor; //File discription for socket used to make connection

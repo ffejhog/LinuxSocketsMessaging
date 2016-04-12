@@ -191,7 +191,10 @@ void  mainHandler(){
         cout << "1. List all users" << endl;
         cout << "2. Request a partnership with another user" << endl;
         cout << "3. View partner requests" << endl;
-        cout << "7. Logout and Quit" << endl;
+        cout << "4. " << endl;
+        cout << "5. " << endl;
+        cout << "6. " << endl;
+        cout << "7. " << endl;
         string userinput;
         getline(cin, userinput); //Get user choice
         if(userinput==""){ //To prevent errors if server unexpectly diconnects
@@ -211,6 +214,18 @@ void  mainHandler(){
             case 3:
                 writeConnection("3");
                 option3Handler();
+                break;
+            case 4:
+                writeConnection("4");
+                option4Handler();
+                break;
+            case 5:
+                writeConnection("5");
+                option5Handler();
+                break;
+            case 6:
+                writeConnection("6");
+                option6Handler();
                 break;
             case 7:
                 writeConnection("7");
@@ -364,12 +379,13 @@ void option4Handler(){
  *	Arguments: NONE?
  */
 void option5Handler(){
-    int option=readConnection();//assume this will be an integer value of one
-    if(option!=1)
+    string option=readConnection();//assume this will be an integer value of one
+
+    if(option!="1")
     {
         cout<<"Communication Error: Please restart everything and try again."<<endl;
     }//if not correct communication
-    else if(option==1)
+    else if(option=="1")
     {
         string mes="The message was correctly sent";//default message to send;I'm not sure if the user inputs here
         int point=0;
@@ -395,11 +411,11 @@ void option5Handler(){
                 //assume that this will not loop again if a | was added in nested while loop
         }//first while loop
         mes=readConnection();//just reusing old string pointer
-        if(mes==1)
+        if(mes=="1")
         {
             cout<<"Message Sent to Server."<<endl;
             mes=readConnection();
-            if(mes==1)
+            if(mes=="1")
             {
                 cout<<"Message Sent to Recipient"<<endl;
             }//nestted if
