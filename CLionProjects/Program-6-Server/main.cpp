@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
 void *connection_handler(void *client_socket_desc){
     int ClientFileDescriptor = *(int*)client_socket_desc;
     counter++;
-    cout << "Client " + to_string(counter) + " connected";
+    cout << "Client " + to_string(counter) + ": ";
     ConnectionHandler clienthandler(ClientFileDescriptor);
     if(!clienthandler.checkIfAuthenticated()){
         clienthandler.closeConnection();
@@ -91,7 +91,7 @@ void *connection_handler(void *client_socket_desc){
         clienthandler.mainHandler();
         clienthandler.closeConnection();
         counter--;
-        cout << "Client " + to_string(counter) + " disconnected";
+        cout << "Client " + to_string(counter) + ": ";
     }
 
     return 0;

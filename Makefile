@@ -11,6 +11,7 @@ client:
 server: main.o ConnectionHandler.o
 	$(CC) $(CFLAGS)  -pthread -o Program6-Server.out CLionProjects/Program-6-Server/main.o CLionProjects/Program-6-Server/ConnectionHandler.o  #Generates packaged binary file
 	if [ -d "data" ]; then echo "Dir exists"; else mkdir data; fi
+	if [ -d "data/users.bin" ]; then echo "users.bin exists"; else echo "\n" >> data/users.bin; fi
 main.o: CLionProjects/Program-6-Server/main.cpp CLionProjects/Program-6-Server/ConnectionHandler.h #Constucts main.o object
 	$(CC) $(CFLAGS)  -pthread -c CLionProjects/Program-6-Server/main.cpp -o CLionProjects/Program-6-Server/main.o
 

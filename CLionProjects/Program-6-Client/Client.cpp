@@ -282,7 +282,7 @@ void option2Handler(){
     if (status == "1")  //If server send back 1, ready to receive name
     {
         cout << "Ready to receive name: " << endl;
-        cin >> name;
+        getline(cin, name);
         writeConnection(name);  //Send name back to server
     }
     else{

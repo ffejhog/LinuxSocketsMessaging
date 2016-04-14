@@ -111,14 +111,13 @@ void ConnectionHandler::loginHandler(){
 void ConnectionHandler::newUser() {
     writeConnection("1"); // Letting client know Server is ready to recieve
 
-    string enteredUserNamePassword = readConnection(); //Read new user info
+    string enteredUserNamePassword = readConnection();
 
     fstream userDatabase;
     userDatabase.open(FILE_NAME_DIR + "users.bin", ios::in | ios::out | ios::app);
 
 
     string enteredUserName;
-    //This for loop just retrieves the username part of the user|pass pair
     for (int i = 0; i < enteredUserNamePassword.length(); i++) {
         // once the '|' character is reached the for loop breaks
         if (enteredUserNamePassword.at(i) == '|')
@@ -127,30 +126,29 @@ void ConnectionHandler::newUser() {
         enteredUserName += enteredUserNamePassword.at(i);
     }
 
-
     string currentString, currentLine;
     if (userDatabase.is_open() && userDatabase.good()) {
-        while (getline(userDatabase, currentLine)) { //Read each line of the users.bin file
+        while (getline(userDatabase, currentLine)) {
 
             // for loop checks each character for the '|' character which divides username from password in the file
             for (int i = 0; i < currentLine.length(); i++) {
                 // once the '|' character is reached the for loop breaks
                 if (currentLine.at(i) == '|')
                     break;
-                // the current character is added to the String of that represents the single username
+                // the current character is added to the String of usernames that will be written to the client
                 currentString += currentLine.at(i);
             }
-            //
-            if (currentString == enteredUserName) { //CHeck to see if username already exists in the users.bin file
-                writeConnection("0"); //Tell the client username already eexists
+            // a comma added to sepereate usernames in the String
+            if (currentString == enteredUserName) {
+                writeConnection("0");
                 break;
             } else {
-                userDatabase << enteredUserNamePassword << endl; //Add user to the users.bin file.
-                writeConnection("1"); //Tell client user added successfully.
+                userDatabase << enteredUserNamePassword << endl;
+                writeConnection("1");
                 break;
             }
         }
-        userDatabase.close(); //CLose users.bin
+        userDatabase.close();
 
     }
 }
