@@ -192,9 +192,9 @@ void  mainHandler(){
         cout << "2. Request a partnership with another user" << endl;
         cout << "3. View partner requests" << endl;
         cout << "4. View current partners" << endl;
-        cout << "5. " << endl;
-        cout << "6. " << endl;
-        cout << "7. " << endl;
+        cout << "5. Send a message to a user" << endl;
+        cout << "6. Retrieve a message from a user" << endl;
+        cout << "7. Logout" << endl;
         string userinput;
         getline(cin, userinput); //Get user choice
         if(userinput==""){ //To prevent errors if server unexpectly diconnects
@@ -385,46 +385,48 @@ void option5Handler(){
     {
         cout<<"Communication Error: Please restart everything and try again."<<endl;
     }//if not correct communication
-    else if(option=="1")
-    {
-        string mes="The message was correctly sent";//default message to send;I'm not sure if the user inputs here
-        int point=0;
-        int count;
-        string newMes="";
-        while(point<=mes.length())//loop in case mes is longer than 255 characters
-        {
-            count=0;
-            while((point<=mes.length())&&(count<255))//sent strings will have free space in case | needs adding
+    else if(option=="1") {
+        cout << "Who are you sending a message to: " << endl;
+        string userToSendTo;
+        getline(cin, userToSendTo);
+        writeConnection(userToSendTo);
+        string response = readConnection();
+        if (response == "1") {
+            string mes = "The message was correctly sent";//default message to send;I'm not sure if the user inputs here
+            int point = 0;
+            int count;
+            string newMes = "";
+            while (point <= mes.length())//loop in case mes is longer than 255 characters
             {
-                
-                newMes+=mes.at(point);//copy over char
-                
-                if(point=mes.length())//if just added last char, put deliminator at end
-                    newMes+="|";
-                
-                point++;//update values
-                count++;
-                
-            }//another while loop
-            writeConnection(newMes);
-            newMes="";//clear in order to send more using same newMes string pointer
+                count = 0;
+                while ((point <= mes.length()) &&
+                       (count < 255))//sent strings will have free space in case | needs adding
+                {
+
+                    newMes += mes.at(point);//copy over char
+
+                    if (point = mes.length())//if just added last char, put deliminator at end
+                        newMes += "|";
+
+                    point++;//update values
+                    count++;
+
+                }//another while loop
+                writeConnection(newMes);
+                newMes = "";//clear in order to send more using same newMes string pointer
                 //assume that this will not loop again if a | was added in nested while loop
-        }//first while loop
-        mes=readConnection();//just reusing old string pointer
-        if(mes=="1")
-        {
-            cout<<"Message Sent to Server."<<endl;
-            mes=readConnection();
-            if(mes=="1")
-            {
-                cout<<"Message Sent to Recipient"<<endl;
-            }//nestted if
+            }//first while loop
+            mes = readConnection();//just reusing old string pointer
+            if (mes == "1") {
+                cout << "Message Sent to Server." << endl;
+            }
             else
-                cout<<"ERROR: Server could not Send the Message to the Recipient, Please try again later."<<endl;
-        }
-        else
-            cout<<"Server was not able not able to revice the message, but somehow was able to let us know"<<endl;
-    }//if correct communication
+                cout << "Server was not able not able to revice the message, but somehow was able to let us know" <<
+                endl;
+        }//if correct communication
+    }else{
+        cout << "User Not found, please try again" << endl;
+    }
 }//end option5Handler()
 
 /*	Proceedure: void option6Handler()

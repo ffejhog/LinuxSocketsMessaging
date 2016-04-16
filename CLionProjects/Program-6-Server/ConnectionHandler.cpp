@@ -488,7 +488,7 @@ void ConnectionHandler::option5Handler() {
 	string newPartner = readConnection();
 
 	// opens/loads the users.txt file
-	fstream usersFile(FILE_NAME_DIR + userName+ "_Messages.txt", ios::in);
+	fstream usersFile(FILE_NAME_DIR + "users.bin", ios::in);
 	// creates Strings representing the currentLine and each user from the database file
 	string currentLine, currentString;
 	// bool represents if there's a match in the user.txt file
@@ -501,11 +501,14 @@ void ConnectionHandler::option5Handler() {
 		currentString = "";
 
 		// for loop checks each character for the '|' character which divides username from password in the file
-		for(int i = 0; i < currentLine.length(); i++)
-		{
-			// the current character is added to the String for each a username
-			currentString += currentLine.at(i);
-		}
+        for(int i = 0; i < currentLine.length(); i++)
+        {
+            // once the '|' character is reached the for loop breaks
+            if(currentLine.at(i) == '|')
+                break;
+            // the current character is added to the String for each a username
+            currentString += currentLine.at(i);
+        }
 
 		// conditional compares the current username to the partner from the client
 		if(newPartner==currentString) {
@@ -527,8 +530,9 @@ void ConnectionHandler::option5Handler() {
 		// opens or creates the file that is represents the current user's and partner's messages
 		fstream messagesFile(FILE_NAME_DIR + userName+ "_to_" + newPartner + "_Messages.txt", ios::app | ios::out);
 
+
 		// the String newMessage is inserted into the text file
-        messagesFile << newMessage;
+        messagesFile << userName <<"(" << currentDateTime() << "): " << newMessage << endl;
         
         writeConnection("1");
 	}
@@ -615,4 +619,25 @@ int ConnectionHandler::writeConnection(std::string dataToWrite){
         return -1;
     }
     return 0;
+}
+
+/*	Proceedure: currentDateTime()
+*	Author: Jeff
+*	Description: Returns the current date and time
+*	Arguments:
+*		std::string:
+*			Direction - output
+*			Type - string
+*			Description - The data time combination representing the current time
+*/
+
+const std::string ConnectionHandler::currentDateTime() {
+    time_t     now = time(0);
+    struct tm  tstruct; //Structure built for time storage(Located in time.h)
+    char       buf[80]; //Create temporary character buffer for time values
+    tstruct = *localtime(&now); //Set the time structure equal to the current time (in epoch time) to values in time struct
+
+    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct); //Shifts the time value to Year - Month - Day - Time format
+
+    return buf;
 }

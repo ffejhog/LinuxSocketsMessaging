@@ -39,8 +39,9 @@ class ConnectionHandler {
         std::string userName;
         std::string readConnection();
         int writeConnection(std::string dataToWrite);
+        const std::string currentDateTime();
 
-        const string FILE_NAME_DIR = "data/";
+        const string FILE_NAME_DIR = "/home/jeffrey/Documents/program-6/CLionProjects/Program-6-Server/data/";
 };
 
 
