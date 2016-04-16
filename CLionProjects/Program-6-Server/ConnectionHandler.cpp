@@ -488,7 +488,7 @@ void ConnectionHandler::option5Handler() {
 	string newPartner = readConnection();
 
 	// opens/loads the users.txt file
-	fstream usersFile(FILE_NAME_DIR + userName+ "_Partners.txt", ios::in);
+	fstream usersFile(FILE_NAME_DIR + userName+ "_Messages.txt", ios::in);
 	// creates Strings representing the currentLine and each user from the database file
 	string currentLine, currentString;
 	// bool represents if there's a match in the user.txt file
@@ -553,7 +553,7 @@ void ConnectionHandler::option6Handler() {
     string currentLine, currentString;
 
     // while loop loads each line of the file to currentLine one line at a time
-    if(usersFile.is_open() && usersFile.good()) {
+    if(usersFile.is_open()) {
         int counter = 0;
         while ( getline (usersFile,currentLine) ) {
             counter++;
@@ -567,9 +567,9 @@ void ConnectionHandler::option6Handler() {
 
         cout << currentString << endl;
         // the String of usernames is written to the client via the writeConnection function
-        writeConnection(currentString);
-    }
 
+    }
+    writeConnection(currentString);
 }
 
 

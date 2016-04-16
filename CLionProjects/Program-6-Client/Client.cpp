@@ -191,7 +191,7 @@ void  mainHandler(){
         cout << "1. List all users" << endl;
         cout << "2. Request a partnership with another user" << endl;
         cout << "3. View partner requests" << endl;
-        cout << "4. " << endl;
+        cout << "4. View current partners" << endl;
         cout << "5. " << endl;
         cout << "6. " << endl;
         cout << "7. " << endl;
@@ -434,7 +434,10 @@ void option5Handler(){
  */
 void option6Handler(){
     //assume server is now waiting to send list of user's partners
-    cout << endl << "You have a message from an unknown partner!: " << endl << endl;
+    cout << endl << "What partner would you like to get messages from: " << endl << endl;
+    string input;
+    getline(cin,input);
+    writeConnection(input);
     string str = readConnection();
     string newStr = "";
     for(int i=0; i<str.length();i++)
