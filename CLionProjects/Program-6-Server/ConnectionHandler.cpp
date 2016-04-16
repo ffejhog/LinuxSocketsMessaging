@@ -528,7 +528,7 @@ void ConnectionHandler::option5Handler() {
 		string newMessage = readConnection();
 		
 		// opens or creates the file that is represents the current user's and partner's messages
-		fstream messagesFile(FILE_NAME_DIR + userName+ "_to_" + newPartner + "_Messages.txt", ios::app | ios::out);
+		fstream messagesFile(FILE_NAME_DIR + newPartner + "_Messages.txt", ios::app | ios::out);
 
 
 		// the String newMessage is inserted into the text file
@@ -553,7 +553,7 @@ void ConnectionHandler::option6Handler() {
 	// reads the partner sent from the client to a String 
 	string selectedPartner = readConnection();
 
-	fstream usersFile(FILE_NAME_DIR + selectedPartner + "_to_" + userName + "_Messages.txt", ios::in);
+	fstream usersFile(FILE_NAME_DIR + userName + "_Messages.txt", ios::in);
     string currentLine, currentString;
 
     // while loop loads each line of the file to currentLine one line at a time
