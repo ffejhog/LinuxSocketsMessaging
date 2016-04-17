@@ -392,11 +392,14 @@ void option5Handler(){
         writeConnection(userToSendTo);
         string response = readConnection();
         if (response == "1") {
-            string mes = "The message was correctly sent";//default message to send;I'm not sure if the user inputs here
+            string mes;
+            cout << "What is the message you would like to send" <<endl;
+            getline(cin, mes);
+            response = "0";
             int point = 0;
             int count;
             string newMes = "";
-            while (point <= mes.length())//loop in case mes is longer than 255 characters
+            /*while (point <= mes.length())//loop in case mes is longer than 255 characters
             {
                 count = 0;
                 while ((point <= mes.length()) &&
@@ -412,19 +415,20 @@ void option5Handler(){
                     count++;
 
                 }//another while loop
+                */
+                newMes = mes +"|";
                 writeConnection(newMes);
                 newMes = "";//clear in order to send more using same newMes string pointer
                 //assume that this will not loop again if a | was added in nested while loop
             }//first while loop
-            mes = readConnection();//just reusing old string pointer
-            if (mes == "1") {
+            response = readConnection();//just reusing old string pointer
+            if (response == "1") {
                 cout << "Message Sent to Server." << endl;
             }
             else
-                cout << "Server was not able not able to revice the message, but somehow was able to let us know" <<
-                endl;
+                cout << "Server was not able not able to revice the message, but somehow was able to let us know" << endl;
         }//if correct communication
-    }else{
+    else{
         cout << "User Not found, please try again" << endl;
     }
 }//end option5Handler()
@@ -436,10 +440,8 @@ void option5Handler(){
  */
 void option6Handler(){
     //assume server is now waiting to send list of user's partners
-    cout << endl << "What partner would you like to get messages from: " << endl << endl;
-    string input;
-    getline(cin,input);
-    writeConnection(input);
+    cout << endl << "Here is all of your messages"<<endl;
+
     string str = readConnection();
     string newStr = "";
     for(int i=0; i<str.length();i++)

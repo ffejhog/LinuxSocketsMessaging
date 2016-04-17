@@ -3,16 +3,16 @@
 *	Author: Daniel Lecheler & Jeff Near
 *	Classes/Proceedures:
 *		ConnectionHandler(int) - constructor
-*		loginHandler() - 
-*		newUser() - 
-*		checkIfAuthenticated() - 
-*		mainHandler() - 
-*		option1Handler() - 
-*		option2Handler() - 
-*		option3Handler() - 
-*		option4Handler() - 
-*		option5Handler() - 
-*		option6Handler() - 
+*		loginHandler() -
+*		newUser() -
+*		checkIfAuthenticated() -
+*		mainHandler() -
+*		option1Handler() -
+*		option2Handler() -
+*		option3Handler() -
+*		option4Handler() -
+*		option5Handler() -
+*		option6Handler() -
 */
 #include "ConnectionHandler.h"
 
@@ -350,7 +350,7 @@ void ConnectionHandler::option3Handler() {
 	currentString += "|";
 
 	// String is written to the client
-	writeConnection(currentString);
+	writeConnection(currentString+"\n");
 
 	// String is read from the client, and bool is used to determine if the user accepted or rejected
 	string newPartner = readConnection();
@@ -358,7 +358,7 @@ void ConnectionHandler::option3Handler() {
 
 	// conditional does nothing if 0 is returned, or the value of accepted is false
 	if(newPartner=="0") {
-    } 
+    }
 	else if(!accepted)
 	{
 		// newPartner has the |a or |r removed
@@ -366,21 +366,21 @@ void ConnectionHandler::option3Handler() {
         // a temp String and temp file are created
 		string tempString = "";
         fstream temp(FILE_NAME_DIR + userName + "temp.txt", ios::app | ios::out);
-	
+
 		// the for loop copies the values from the partner text file and adds them to the temp text file, excluding the current value of newPartner
 		for(int i = 0; i < currentString.length(); i++) {
 			if(tempString.compare(newPartner)) {
 				i++;
 				tempString = "";
-			} 
+			}
 			else if(currentString.at(i) == ',' || currentString.at(i) == '|') {
 				temp << tempString;
 				tempString = "";
 			}
 			tempString += currentString.at(i);
 		}
-		
-		// replaces the partner request file with the temp file, that's a copy of the original with the partner request that was accepted removed	
+
+		// replaces the partner request file with the temp file, that's a copy of the original with the partner request that was accepted removed
 
 		usersFile.close();
     	temp.close();
@@ -388,7 +388,7 @@ void ConnectionHandler::option3Handler() {
         string filename2 = FILE_NAME_DIR + userName + "temp.txt";
         remove(fileName1.c_str());
     	rename(filename2.c_str(),fileName1.c_str());
-		
+
 	}
 	else {
 
@@ -404,7 +404,7 @@ void ConnectionHandler::option3Handler() {
 			if(tempString.compare(newPartner)) {
 				i++;
 				tempString = "";
-			} 
+			}
 			else if(currentString.at(i) == ',' || currentString.at(i) == '|') {
 				temp << tempString;
 				tempString = "";
@@ -425,8 +425,8 @@ void ConnectionHandler::option3Handler() {
 			}
 
 		}
-	
-	// replaces the partner request file with the temp file, that's a copy of the original with the partner request that was accepted removed	
+
+	// replaces the partner request file with the temp file, that's a copy of the original with the partner request that was accepted removed
 	usersFile.clear();
 	usersFile.close();
     temp.close();
@@ -435,9 +435,9 @@ void ConnectionHandler::option3Handler() {
     remove(fileName.c_str());
     rename(fileName2.c_str(),fileName.c_str());
 
-			
+
 	}
-	
+
 }
 
 /*	Proceedure: option4Handler()
@@ -469,8 +469,9 @@ void ConnectionHandler::option4Handler() {
         cout << currentString << endl;
         // the String of usernames is written to the client via the writeConnection function
         writeConnection(currentString);
-    }
 
+    }
+    usersFile.close();
 }
 
 /*	Proceedure: option5Handler()
@@ -480,7 +481,7 @@ void ConnectionHandler::option4Handler() {
 *		none
 */
 void ConnectionHandler::option5Handler() {
-		
+
 	// sends a 1 to the client to indicate the server is ready recieve a String
 	writeConnection("1");
 
@@ -517,30 +518,34 @@ void ConnectionHandler::option5Handler() {
 			break;
 		}
 
-	}
 
+	}
+    usersFile.close();
 	// conditional checks the value of the bool userExists and adds the partner from the client if its true
 	if(userExists) {
 		// 1 is sent to the client to indicate that the server handled the String correctly
 		writeConnection("1");
-		
+
 		// stores the String from the client to newMessage
 		string newMessage = readConnection();
-		
+
 		// opens or creates the file that is represents the current user's and partner's messages
 		fstream messagesFile(FILE_NAME_DIR + newPartner + "_Messages.txt", ios::app | ios::out);
 
 
 		// the String newMessage is inserted into the text file
         messagesFile << userName <<"(" << currentDateTime() << "): " << newMessage << endl;
-        
+
         writeConnection("1");
+        messagesFile.close();
 	}
 	else {
 		// 0 is sent to the client to indicate that the user sent as a partner doesn't exist
 		writeConnection("0");
-	}	
-	
+	}
+
+
+
 }
 
 /*	Proceedure: option6Handler()
@@ -550,8 +555,7 @@ void ConnectionHandler::option5Handler() {
 *		none
 */
 void ConnectionHandler::option6Handler() {
-	// reads the partner sent from the client to a String 
-	string selectedPartner = readConnection();
+	// reads the partner sent from the client to a String
 
 	fstream usersFile(FILE_NAME_DIR + userName + "_Messages.txt", ios::in);
     string currentLine, currentString;
@@ -574,12 +578,14 @@ void ConnectionHandler::option6Handler() {
 
     }
     writeConnection(currentString);
+    usersFile.clear();
+    usersFile.close();
 }
 
 
 /*	Proceedure: closeConnection(const char)
 *	Author: Jeff
-*	Description: 
+*	Description:
 *	Arguments: CLoses the file discriptor for the client, terminating the connection
 */
 void ConnectionHandler::closeConnection() {
