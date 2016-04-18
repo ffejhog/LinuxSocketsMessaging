@@ -292,7 +292,7 @@ void option2Handler(){
 	status = readConnection();  //Server send back 1, shows confirmation
 	if (status == "1")
     {
-        cout << "You are now partnered with <USER" <<endl;
+        cout << "You have send a partner request to " << name <<endl;
     }
     else{
         cout << "user does not Exist!" <<endl;

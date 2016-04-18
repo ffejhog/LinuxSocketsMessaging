@@ -301,7 +301,7 @@ void ConnectionHandler::option2Handler() {
 		fstream partnersFile(FILE_NAME_DIR + newPartner + "_PartnerRequests.txt", ios::app | ios::out);
 
 		// the String newPartner is inserted into the text file
-        partnersFile << userName;
+        partnersFile << userName << endl;
 
 		// 1 is sent to the client to indicate that the server handled the String correctly
 		writeConnection("1");
@@ -324,7 +324,7 @@ void ConnectionHandler::option3Handler() {
 
 	// opens/loads the partnersRequests file, and the partners file
 	fstream usersFile(FILE_NAME_DIR + userName + "_PartnerRequests.txt", ios::in);
-	fstream partnersFile(FILE_NAME_DIR + userName + "_Partners.txt", ios::app | ios::out);
+
 
 	// creates Strings representing the currentLine and each user from the database file
 	string currentLine, currentString ="";
@@ -332,18 +332,9 @@ void ConnectionHandler::option3Handler() {
 	// while loop reads each line of the partnersRequests file
 	while(getline(usersFile, currentLine) )	{
 
-		// for loop checks each character for the '|' character which divides username from password in the file
-		for(int i = 0; i < currentLine.length(); i++)
-		{
-			// once the '|' character is reached the for loop breaks
-			if(currentLine.at(i) == '|')
-				break;
-			// the current character is added to the String for each a username
-			currentString += currentLine.at(i);
-		}
 
 		// people are seperated by commas in the String based list
-		currentString += ",";
+		currentString += (currentLine +",");
 	}
 
 	// String is deliminated by a | character
@@ -361,33 +352,27 @@ void ConnectionHandler::option3Handler() {
     }
 	else if(!accepted)
 	{
-		// newPartner has the |a or |r removed
+        // newPartner has the |a or |r removed
         newPartner = newPartner.substr(0, newPartner.length()-2);
         // a temp String and temp file are created
-		string tempString = "";
-        fstream temp(FILE_NAME_DIR + userName + "temp.txt", ios::app | ios::out);
+        string currentLine = "";
+        fstream temp(FILE_NAME_DIR + userName + "temp.txt", ios::out);
 
-		// the for loop copies the values from the partner text file and adds them to the temp text file, excluding the current value of newPartner
-		for(int i = 0; i < currentString.length(); i++) {
-			if(tempString.compare(newPartner)) {
-				i++;
-				tempString = "";
-			}
-			else if(currentString.at(i) == ',' || currentString.at(i) == '|') {
-				temp << tempString;
-				tempString = "";
-			}
-			tempString += currentString.at(i);
-		}
+        usersFile.clear();
+        usersFile.seekg(0,std::ios::beg);
+        // the for loop copies the values from the partner text file and adds them to the temp text file, excluding the current value of newPartner
+        while(getline(usersFile, currentLine)){
+            if(newPartner==currentLine){
 
-		// replaces the partner request file with the temp file, that's a copy of the original with the partner request that was accepted removed
-
-		usersFile.close();
-    	temp.close();
-        string fileName1 = FILE_NAME_DIR + userName+ "_PartnerRequests.txt";
-        string filename2 = FILE_NAME_DIR + userName + "temp.txt";
-        remove(fileName1.c_str());
-    	rename(filename2.c_str(),fileName1.c_str());
+            }else{
+                temp << currentLine;
+            }
+        }
+        temp.close();
+        string fileName = FILE_NAME_DIR + userName + "_PartnerRequests.txt";
+        string fileName2 = FILE_NAME_DIR + userName+ "temp.txt";
+        remove(fileName.c_str());
+        rename(fileName2.c_str(),fileName.c_str());
 
 	}
 	else {
@@ -395,50 +380,40 @@ void ConnectionHandler::option3Handler() {
 		// newPartner has the |a or |r removed
         newPartner = newPartner.substr(0, newPartner.length()-2);
         // a temp String and temp file are created
-		string tempString = "";
-        fstream temp(FILE_NAME_DIR + userName + "temp.txt", ios::app | ios::out);
+		string currentLine = "";
+        fstream temp(FILE_NAME_DIR + userName + "temp.txt", ios::out);
         fstream newPartnerPartners(FILE_NAME_DIR + newPartner + "_Partners.txt", ios::app | ios::out);
-
-        // the for loop copies the values from the partner text file and adds them to the temp text file, excluding the current value of newPartner
-		for(int i = 0; i < currentString.length(); i++) {
-			if(tempString.compare(newPartner)) {
-				i++;
-				tempString = "";
-			}
-			else if(currentString.at(i) == ',' || currentString.at(i) == '|') {
-				temp << tempString;
-				tempString = "";
-			}
-			tempString += currentString.at(i);
-		}
+        fstream currentPartnerPartners(FILE_NAME_DIR + userName + "_Partners.txt", ios::app | ios::out);
 
         usersFile.clear();
-        usersFile.seekg(0, ios::beg);
-		// for loop checks each character for the '|' character which divides username from password in the file
-		while(getline(usersFile, currentString) )	{
-			// conditional compares the current username to the partner from the client client
-			if(newPartner==currentString) {
-				// String is written to the file
-				partnersFile << currentString;
-                newPartnerPartners << currentString;
-				break;
-			}
+        usersFile.seekg(0,std::ios::beg);
+        // the for loop copies the values from the partner text file and adds them to the temp text file, excluding the current value of newPartner
+		while(getline(usersFile, currentLine)){
+            if(newPartner==currentLine){
+                newPartnerPartners << userName <<endl;
+                currentPartnerPartners << newPartner<<endl;
+            }else{
+                temp << currentLine;
+            }
+        }
 
+        currentPartnerPartners.close();
+        newPartnerPartners.close();
+        temp.close();
+        string fileName = FILE_NAME_DIR + userName + "_PartnerRequests.txt";
+        string fileName2 = FILE_NAME_DIR + userName+ "temp.txt";
+        remove(fileName.c_str());
+        rename(fileName2.c_str(),fileName.c_str());
+
+		// for loop checks each character for the '|' character which divides username from password in the fil
 		}
-
 	// replaces the partner request file with the temp file, that's a copy of the original with the partner request that was accepted removed
-	usersFile.clear();
+
 	usersFile.close();
-    temp.close();
-    string fileName = FILE_NAME_DIR + userName+ "_PartnerRequests.txt";
-    string fileName2 = FILE_NAME_DIR + userName+ "temp.txt";
-    remove(fileName.c_str());
-    rename(fileName2.c_str(),fileName.c_str());
-
-
-	}
 
 }
+
+
 
 /*	Proceedure: option4Handler()
 *	Author: Daniel
@@ -470,6 +445,8 @@ void ConnectionHandler::option4Handler() {
         // the String of usernames is written to the client via the writeConnection function
         writeConnection(currentString);
 
+    }else{
+        writeConnection("\n");
     }
     usersFile.close();
 }
