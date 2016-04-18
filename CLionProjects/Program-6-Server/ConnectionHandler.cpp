@@ -555,8 +555,9 @@ void ConnectionHandler::option6Handler() {
 
     }
     writeConnection(currentString);
-    usersFile.clear();
     usersFile.close();
+    string fileName = FILE_NAME_DIR + userName + "_Messages.txt";
+    remove(fileName.c_str());
 }
 
 

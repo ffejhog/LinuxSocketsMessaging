@@ -24,3 +24,4 @@ clean: #removes all compiled object files
 cleanall: #Removes all but source files
 	-rm *.out
 	-rm CLionProjects/Program-6-Server/*.o
+	-rm -rf data/
