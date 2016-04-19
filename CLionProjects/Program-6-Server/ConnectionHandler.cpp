@@ -1,18 +1,20 @@
 /*
-*	File Name: Player.cpp
-*	Author: Daniel Lecheler & Jeff Near
+*	File Name: ConnectionHandler.cpp
+*	Author: Daniel Lecheler & Jeff Neer
 *	Classes/Proceedures:
 *		ConnectionHandler(int) - constructor
-*		loginHandler() -
-*		newUser() -
-*		checkIfAuthenticated() -
-*		mainHandler() -
-*		option1Handler() -
-*		option2Handler() -
-*		option3Handler() -
-*		option4Handler() -
-*		option5Handler() -
-*		option6Handler() -
+*		loginHandler() - Handles login process
+*		newUser() - Handles adding a new user
+*		checkIfAuthenticated() - returns if user logged in
+*		mainHandler() - handles main menu for user
+*		option1Handler() - handles option 1
+*		option2Handler() - handles option 2
+*		option3Handler() - handles option 3
+*		option4Handler() - handles option 4
+*		option5Handler() - handles option 5
+*		option6Handler() - handles option 6
+*		readConnection() -  Reads data from socket
+*		writeConnection(std::string dataToWrite) - Writes data to socket
 */
 #include "ConnectionHandler.h"
 

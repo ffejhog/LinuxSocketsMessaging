@@ -1,4 +1,34 @@
 #include "Client.h"
+/*
+*	File Name: Client.cpp
+*	Author: Kevin Tran, Jeff Neer, and Jeremy Polansky
+*	Classes/Proceedures:
+*		int main(int argc, char *argv[]) - constructor
+*		mainClientHandler() - handles main login menu
+*		userLogin() - Handles logging in a user
+*		newUser() - Handles adding a new user
+*		mainHandler() - Handles main menu for logged in user
+*		option1Handler() - Option 1 handler
+*		option2Handler() - Option 2 handler
+*		option3Handler() - Option 3 handler
+*		option4Handler() - Option 4 handler
+*		option5Handler() - Option 5 handler
+*		option6Handler() - Option 6 handler
+*		readConnection() -  Reads data from socket
+*		writeConnection(std::string dataToWrite) - Writes data to socket
+*		passHash(const char* input, unsigned int seed) - Hashes a given character array
+*/
+
+
+
+
+/*	Procedure: main()
+*	Author: Jeff
+*	Description: Opens the socket for the client and binds to to the server.
+*	Arguments:
+*		argc - Input, Number of arguments
+*		*argv[] - input, the array of command line arguments
+*/
 
 int main(int argc, char *argv[])
 {

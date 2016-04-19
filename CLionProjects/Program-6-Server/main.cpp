@@ -1,3 +1,10 @@
+/*
+*	File Name: main.cpp
+*	Author: Jeff Neer
+*	Classes/Proceedures:
+*		main(int argc, char *argv[])  - Handles creating a socket and accepting socket connections, then given those connection to aseparatee thread
+*		*connection_handler(void *client_socket_desc) - Method which handles each thread swapned from the program
+*/
 #include <iostream>
 #include <string.h>
 #include <unistd.h>
@@ -9,8 +16,17 @@
 
 using namespace std;
 
+
 void *connection_handler(void *); //Prototype for handler
 int counter = 0; //Stores number of connected clients.
+
+/*	Procedure: main()
+*	Author: Jeff
+*	Description: Opens the socket for the server and binds it to the client.
+*	Arguments:
+*		argc - Input, Number of arguments
+*		*argv[] - input, the array of command line arguments
+*/
 
 int main(int argc, char *argv[]) {
     int socketFileDescriptor;
@@ -79,18 +95,25 @@ int main(int argc, char *argv[]) {
     //Connection in connectedClientFileDescriptor, need to create class instance and spawn thread for managing client connection
     //For now this code allows one connection as a test.
 
+/*	Procedure: *connection_handler(void *client_socket_desc)
+*	Author: Jeff
+*	Description: Handles each thread of the program. Each thread represents one server
+*	Arguments:
+*		void *client_socket_desc - The file descriptor of the connected client
+*
+*/
 
 void *connection_handler(void *client_socket_desc){
-    int ClientFileDescriptor = *(int*)client_socket_desc;
-    counter++;
+    int ClientFileDescriptor = *(int*)client_socket_desc; // save client file descriptor from void* to something more useable
+    counter++; //Incrument counter for number of clients connected
     cout << "Client " + to_string(counter) + ": ";
-    ConnectionHandler clienthandler(ClientFileDescriptor);
-    if(!clienthandler.checkIfAuthenticated()){
-        clienthandler.closeConnection();
+    ConnectionHandler clienthandler(ClientFileDescriptor); //Create a new client handler instance(This handles login)
+    if(!clienthandler.checkIfAuthenticated()){ //If login fails from the ConnectionHandler consctructor...
+        clienthandler.closeConnection(); //Kill the connection
     }else{
-        clienthandler.mainHandler();
-        clienthandler.closeConnection();
-        counter--;
+        clienthandler.mainHandler(); //Otherwise spawn main menu process
+        clienthandler.closeConnection(); //Then kill connection afterwards
+        counter--; //Counter of number of clients connected decremented
         cout << "Client " + to_string(counter) + ": ";
     }
 
