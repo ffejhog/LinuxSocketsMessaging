@@ -75,7 +75,7 @@ void ConnectionHandler::loginHandler(){
             if(readLine == enteredUserName) { //If user|pass combo found, authenticate
                 authenticated = true;
 
-                for(int i = 0; i < enteredUserName.length(); i++)
+                /*for(int i = 0; i < enteredUserName.length(); i++)
                 {
                     // once the '|' character is reached the for loop breaks
                     if(enteredUserName.at(i) == '|')
@@ -83,6 +83,8 @@ void ConnectionHandler::loginHandler(){
                     // the current character is added to the String for each a username
                     userName += enteredUserName.at(i); //Retreieve just the username for the class.
                 }
+*/
+                userName += recursion(enteredUserName);
 
                 break;
             }
@@ -101,6 +103,22 @@ void ConnectionHandler::loginHandler(){
 
 
 
+
+}
+
+/*	Proceedure: recursion()
+*	Author: Jeff
+*	Description: Recursivly finds the | symbol in a string
+*	Arguments:
+*		input - input to check
+*   output - String before | character
+*/
+
+string ConnectionHandler::recursion(string input){
+  if(input.at(input.length()-1) == '|'){
+    return  input.substr(0, input.length()-1);
+  }
+    return recursion(input.substr(0,input.length()-2));
 
 }
 

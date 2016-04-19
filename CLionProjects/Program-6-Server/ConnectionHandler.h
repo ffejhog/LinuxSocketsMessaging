@@ -28,7 +28,7 @@ class ConnectionHandler {
         void loginHandler();
         void newUser();
         bool checkIfAuthenticated();
-
+        string recursion(string input);
 
 
     private:
