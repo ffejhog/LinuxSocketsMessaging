@@ -1,3 +1,26 @@
+-------------------------------------------------------------------------------------------------
+|					                  LinuxSocketsMessaging		    			                |
+|	                                                											|
+|	Programmers: 	Daniel Lecheler								                                |
+|			        Jeffrey Neer							                                   	|
+|			        Jeremy Polansky						                                    	|
+|			        Kevin Tran						                                	        |
+|											                                                	|
+|	Files:		    Program-6-Client/Client.cpp					                            	|
+|			        Program-6-Client/Client.h							                        |
+|			        Program-6-Client/Makefile			                            	       	|
+|			        Program-6-Server/ConnectionHandler.cpp							            |
+|			        Program-6-Server/ConnectionHandler.h				                       	|
+|			        Program-6-Server/main.cpp			                    			        |
+|			        Program-6-Server/Makefile				                        	    	|
+|			        Makefile                                                                    |
+|                   PG6Report.docx                                                              |
+|                   README                      				                            	|
+-------------------------------------------------------------------------------------------------
+
+
+PROJECT PROBLEM DESCRIPTION:
+
 Write a program which allows users to place and read messages on a remote server.
 
 The program should require users to register (i.e., establish a username and password).
