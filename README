@@ -2,20 +2,20 @@
 |					LinuxSocketsMessaging		    			|
 |	                                                					|
 |	Programmers: 	Daniel Lecheler								|
-|			        Jeffrey Neer							|
-|			        Jeremy Polansky						        |
-|			        Kevin Tran						        |
+|			Jeffrey Neer								|
+|			Jeremy Polansky						      	  	|
+|			Kevin Tran						       		|
 |											        |
-|	Files:		    Program-6-Client/Client.cpp					        |
-|			        Program-6-Client/Client.h					|
-|			        Program-6-Client/Makefile			                |
-|			        Program-6-Server/ConnectionHandler.cpp				|
-|			        Program-6-Server/ConnectionHandler.h				|
-|			        Program-6-Server/main.cpp			                |
-|			        Program-6-Server/Makefile				        |
-|			        Makefile                                                        |
-|                   PG6Report.docx                                                              |
-|                   README                      				                |
+|	Files:		Program-6-Client/Client.cpp					        |
+|			Program-6-Client/Client.h						|
+|			Program-6-Client/Makefile			                	|
+|			Program-6-Server/ConnectionHandler.cpp					|
+|			Program-6-Server/ConnectionHandler.h					|
+|			Program-6-Server/main.cpp			                	|
+|			Program-6-Server/Makefile				        	|
+|			Makefile                                                        	|
+|                  	PG6Report.docx                                                          |
+|                   	README                      				                |
 -------------------------------------------------------------------------------------------------
 
 
